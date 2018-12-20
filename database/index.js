@@ -19,6 +19,14 @@ const addNewUser = function(id, name, review, rating) {
   });
 }
 
+const getAllUsers = function(callback) {
+  var query = `select * from reviews`;
+  connection.query(query, (err, result) => {
+    if (err) { throw err; }
+    callback(err, result);
+  });
+}
+
 module.exports = {
-  addNewUser
+  addNewUser, getAllUsers
 };
