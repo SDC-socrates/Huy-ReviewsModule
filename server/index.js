@@ -8,9 +8,9 @@ const PORT = 3000;
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
 
-app.use(express.static(__dirname + '../client/dist/index.html'));
+app.use(express.static(__dirname + '/../client/dist'));
 
-app.get("/api/turash/reviews", (req,res) => {
+app.get("/api/turash/reviews/:id", (req,res) => {
   // Make call to our DB
   db.getAllUsers( (err, result) => {
     if (err) { throw err; }

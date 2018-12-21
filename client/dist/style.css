@@ -1,0 +1,13 @@
+.tableRow {
+  background-color: silver;
+}
+
+#picture {
+  width: 100px;
+  height: 200px;
+}
+
+#reviewAndName {
+  width: 500px;
+  height: 200px;
+}
