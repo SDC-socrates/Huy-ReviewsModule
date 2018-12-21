@@ -1,28 +1,19 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
 
-class Reviews extends React.Component {
-  constructor(props){
-    super(props);
-  }
+const Reviews = () => (
+  <tr className="tableRow">
+    <td id="picture">
+        picture
+    </td>
 
-  render () {
-    return (
-      <tr className="tableRow">
-        <td id="picture">
-          'Picture'
-        </td>
-
-        <td id="reviewAndName">
-          'Review'
-          <tr id="review">
-            <td> 'test' </td>
-            <td> 'testag' </td>
-          </tr>
-        </td>
+    <td id="reviewAndName">
+        review
+      <tr id="review">
+        <td> name </td>
+        <td> rating </td>
       </tr>
-    );
-  }
-}
+    </td>
+  </tr>
+);
 
 export default Reviews;

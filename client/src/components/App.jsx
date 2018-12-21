@@ -1,34 +1,43 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
-import Reviews from './Reviews.jsx';
-const axios = require('axios');
+import axios from 'axios';
+import Reviews from './Reviews';
+
 
 class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      reviews: []
-    }
+      reviews: [],
+    };
   }
 
-  getFetch() {
+  componentDidMount() {
+    this.getAllReviews();
+  }
+
+  getAllReviews() {
     axios.get('/api/turash/reviews/:id')
-    .then ( (result) => {
-      this.setState({ reviews : result.data });
-    })
-    .catch( (err) => {
-      console.log(err);
-    })
+      .then((result) => {
+        this.setState({ reviews: result.data });
+      })
+      .catch((err) => {
+        if (err) { throw err; }
+      });
   }
 
-  componentDidMount () {
-    this.getFetch();
-  }
-  render () {
+  render() {
+    const { reviews } = this.state;
+
     return (
       <table className="reviewsTable">
         <tbody className="tableBody">
-          { this.state.reviews.map( (element, key) => <Reviews review={element} key={key} />)
+          {
+            reviews.map((element, key) => (
+              <Reviews
+                review={element}
+                key={parseInt(key.toString(), 10)}
+              />
+            ))
           }
         </tbody>
       </table>
