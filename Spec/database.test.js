@@ -19,7 +19,7 @@ afterEach(() => {
 });
 
 
-test('should seed database', async (done) => {
+test('should seed and retrieve data from database', async (done) => {
   faker.insertIntoDb();
   db.getAllUsers( (err, result) => {
     if (err) { throw err; }
@@ -29,15 +29,3 @@ test('should seed database', async (done) => {
     done();
   });
 });
-
-
-// test('Retrieve data from database', async (done) => {
-
-//   db.getAllUsers( (err, result) => {
-//     if (err) { throw err; }
-//     expect(Array.isArray(result)).toBe(true);
-//     expect(result).toHaveLength(100);
-//     expect(result[0]).toHaveProperty('userId', 'name', 'review', 'rating');
-//     done();
-//   });
-// });
