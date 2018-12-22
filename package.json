@@ -6,9 +6,9 @@
   "scripts": {
     "start": "nodemon server/index.js",
     "build": "webpack -d --watch",
-    "test": "jest",
+    "test": "jest --detectOpenHandles",
     "seed-db": "node faker.js insertIntoDb 10",
-    "lint": "eslint **/*.jsx --fix"
+    "lint": "eslint **/*.jsx"
   },
   "author": "",
   "license": "ISC",
