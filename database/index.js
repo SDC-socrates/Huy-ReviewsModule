@@ -14,15 +14,17 @@ connection.connect();
 const addNewUser = function(userId, name, review, rating) {
   var query = `insert ignore into reviews(userId, name, review, rating) values ("${userId}", "${name}", "${review}","${rating}")`;
   connection.query(query, (err) => {
+    connection.end();
     if (err) { throw err; }
     // console.log("Added To DB");
   });
 }
 
+// TODO: Function to fetch for a single specific review
+
 const getAllUsers = function(callback) {
   var query = `select * from reviews`;
   connection.query(query, (err, result) => {
-    connection.end();
     if (err) { throw err; }
     callback(err, result);
   });

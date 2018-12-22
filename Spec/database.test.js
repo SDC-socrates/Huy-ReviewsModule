@@ -1,31 +1,33 @@
 const faker = require('../faker.js');
 const db = require('../database/index.js')
-var mysql = require('mysql');
+const mysql = require('mysql');
 
-var connection = mysql.createConnection({
-  user: 'root',
-  password: '',
-  database: 'reviews'
-});
+var dbConnection;
 
-beforeEach(() => {
-  connection.query('delete from reviews', (err) => {
-    if (err) { throw err; }
+beforeEach( function() {
+  dbConnection = mysql.createConnection({
+    user: 'root',
+    password: '',
+    database: 'reviews'
   });
+  dbConnection.connect();
 });
 
-afterEach(() => {
-  connection.end();
+afterEach(function(done) {
+  dbConnection.query('truncate ' + 'reviews', done);
+  dbConnection.end();
 });
 
 
 test('should seed and retrieve data from database', async (done) => {
-  faker.insertIntoDb();
-  db.getAllUsers( (err, result) => {
+  faker.insertIntoDb(1);
+  var query = `select * from reviews`;
+  dbConnection.query(query, (err, results) => {
     if (err) { throw err; }
-    expect(Array.isArray(result)).toBe(true);
-    expect(result).toHaveLength(100);
-    expect(result[0]).toHaveProperty('userId', 'name', 'review', 'rating');
+    console.log('results', results);
+    expect(Array.isArray(results)).toBe(true);
+    expect(results).toHaveLength(1);
+    expect(results[0]).toHaveProperty('userId', 'name', 'review', 'rating');
     done();
   });
 });

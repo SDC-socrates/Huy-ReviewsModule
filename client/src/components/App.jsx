@@ -25,6 +25,8 @@ class App extends React.Component {
       });
   }
 
+  // TODO: Function to fetch for specific review
+
   render() {
     const { reviews } = this.state;
     return (
