@@ -27,7 +27,6 @@ class App extends React.Component {
 
   render() {
     const { reviews } = this.state;
-
     return (
       <table className="reviewsTable">
         <tbody className="tableBody">
