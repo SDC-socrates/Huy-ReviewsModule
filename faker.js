@@ -1,9 +1,9 @@
 const faker = require('faker');
 const db = require('./database/index.js');
 
-const insertIntoDb = ((numOfTimes = 100) => {
+const insertIntoDb = ((numOfTimes = 101) => {
   for (let i = 0; i < numOfTimes; i += 1) {
-    const id = faker.random.number();
+    const userId = faker.random.number();
     const name = faker.name.findName();
     const review = faker.lorem.sentences();
     const rating = faker.random.number({
@@ -11,10 +11,10 @@ const insertIntoDb = ((numOfTimes = 100) => {
       max: 5,
     });
 
-    db.addNewUser(id, name, review, rating);
+    db.addNewUser(userId, name, review, rating);
   }
-})();
+});
 
 module.exports = {
-  insertIntoDb,
+  insertIntoDb
 };
