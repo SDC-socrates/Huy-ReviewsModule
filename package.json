@@ -6,7 +6,7 @@
   "scripts": {
     "start": "nodemon server/index.js",
     "build": "webpack -d --watch",
-    "test": "jest --detectOpenHandles",
+    "test": "jest",
     "seed-db": "node faker.js insertIntoDb 10",
     "lint": "eslint **/*.jsx"
   },
