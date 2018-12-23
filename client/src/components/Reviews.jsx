@@ -1,19 +1,11 @@
 import React from 'react';
 
-const Reviews = () => (
-  <tr className="tableRow">
-    <td id="picture">
-        picture
-    </td>
+const Picture = () => (
+  <div className="individualReview">
+    <div className="picture"> </div>
 
-    <td id="reviewAndName">
-        review
-      <tr id="review">
-        <td> name </td>
-        <td> rating </td>
-      </tr>
-    </td>
-  </tr>
+    <div className="reviewAndName"> Very easy. Excellent communication. Very satisfied. Thank you! </div>
+  </div>
 );
 
-export default Reviews;
+export default Picture;
