@@ -26,22 +26,19 @@ class App extends React.Component {
   }
 
   // TODO: Function to fetch for specific review
-
   render() {
     const { reviews } = this.state;
     return (
-      <table className="reviewsTable">
-        <tbody className="tableBody">
-          {
-            reviews.map((element, key) => (
-              <Reviews
-                review={element}
-                key={parseInt(key.toString(), 10)}
-              />
-            ))
-          }
-        </tbody>
-      </table>
+      <div className="reviews">
+        {
+          reviews.map((element, key) => (
+            <Reviews
+              review={element}
+              key={parseInt(key.toString(), 10)}
+            />
+          ))
+        }
+      </div>
     );
   }
 }

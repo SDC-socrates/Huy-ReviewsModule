@@ -2,12 +2,27 @@
   background-color: silver;
 }
 
-#picture {
-  width: 100px;
-  height: 200px;
+.reviews {
+  display: flex;
+  flex-direction: column;
 }
 
-#reviewAndName {
-  width: 500px;
-  height: 200px;
+.picture {
+  border: 2px solid #ffa94d;
+  border-radius: 5px;
+  background-color: #ffd8a8;
+  width: 100px;
+  padding: 1em;
+  color: #d9480f;
+  float: left;
+}
+
+.reviewAndName {
+  border: 2px solid #ffa94d;
+  border-radius: 5px;
+  background-color: #ffd8a8;
+  width: 400px;
+  padding: 1em;
+  color: #d9480f;
+  float: left;
 }
