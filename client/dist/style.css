@@ -2,27 +2,36 @@
   background-color: silver;
 }
 
-.reviews {
+.reviews{
   display: flex;
   flex-direction: column;
 }
 
-.picture {
-  border: 2px solid #ffa94d;
-  border-radius: 5px;
-  background-color: #ffd8a8;
-  width: 100px;
-  padding: 1em;
-  color: #d9480f;
-  float: left;
+.individualReview {
+  margin-top: 10px;
+  margin-bottom: 10px;
 }
 
+.picture {
+  /*border: 2px solid #ffa94d;*/
+  border-radius: 100px;
+  max-width: 100%;
+  width: 50px;
+  height: 50px;
+  padding: 1em;
+  float: left;
+  background-image: url('../images/emptyAvatar.jpg');
+  background-size: cover;
+}
+
+
+
 .reviewAndName {
-  border: 2px solid #ffa94d;
-  border-radius: 5px;
-  background-color: #ffd8a8;
+  /*border: 2px solid #ffa94d;*/
+  /*background-color: #ffd8a8;*/
   width: 400px;
   padding: 1em;
+  margin-left: 10px;
   color: #d9480f;
   float: left;
 }
