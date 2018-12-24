@@ -11,12 +11,11 @@ connection.connect();
 
 // TODO: Do not allow user to update their review if
 //       they already left a review
-const addNewUser = function(userId, name, review, rating, callback) {
-  var query = `insert ignore into reviews(userId, name, review, rating) values ("${userId}", "${name}", "${review}","${rating}")`;
+const addNewUser = function(userId, name, review, rating, date) {
+  var query = `insert ignore into reviews(userId, name, review, rating, date) values ("${userId}", "${name}", "${review}","${rating}", "${date}")`;
   connection.query(query, (err) => {
     if (err) { throw err; }
     // console.log("Added To DB");
-    if (callback) { callback(err); }
   });
 }
 
@@ -29,7 +28,15 @@ const getAllUsers = function(callback) {
   });
 }
 
+const getReviewCount = function(callback) {
+  var query = `select count(*) from reviews`;
+  connection.query(query, (err, result) => {
+    if (err) { throw err; }
+    callback(err, result);
+  });
+}
+
 
 module.exports = {
-  addNewUser, getAllUsers, connection
+  addNewUser, getAllUsers, connection, getReviewCount
 };

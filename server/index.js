@@ -15,6 +15,14 @@ app.get('/api/turash/reviews/:id', (req, res) => {
   // Make call to our DB
   db.getAllUsers((err, result) => {
     if (err) { throw err; }
+    res.send(result);
+  });
+});
+
+app.get('/api/turash/reviews/:id/reviewCount', (req, res) => {
+  // Make call to our DB
+  db.getReviewCount((err, result) => {
+    if (err) { throw err; }
     res.json(result);
   });
 });
