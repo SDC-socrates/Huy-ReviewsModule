@@ -7,7 +7,7 @@
     "start": "nodemon server/index.js",
     "build": "webpack -d --watch",
     "test": "jest",
-    "seed-db": "node faker.js insertIntoDb 10",
+    "seed-db": "node faker.js insertIntoDb 5",
     "lint": "eslint **/*.jsx"
   },
   "author": "",
