@@ -28,7 +28,15 @@ const getAllUsers = function(callback) {
   });
 }
 
+const getReviewCount = function(callback) {
+  var query = `select count(*) from reviews`;
+  connection.query(query, (err, result) => {
+    if (err) { throw err; }
+    callback(err, result);
+  });
+}
+
 
 module.exports = {
-  addNewUser, getAllUsers, connection
+  addNewUser, getAllUsers, connection, getReviewCount
 };
