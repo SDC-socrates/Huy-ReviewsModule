@@ -20,10 +20,10 @@ const insertIntoDb = (numOfTimes = 100) => {
 
   users.sort(function compare(a, b) {
     if (a[4] < b[4]) {
-      return 1;
+      return -1;
     }
     if (a[4] > b[4]) {
-      return -1;
+      return 1;
     }
     return 0;
   });
