@@ -1,7 +1,7 @@
 import React from 'react';
 
 const Picture = (props) => (
-  console.log('props', props),
+  // console.log('props', props),
 
   <div className="individualReview">
     <div className="picture"> </div>
