@@ -10,9 +10,10 @@ CREATE TABLE reviews (
   name varchar(50) NOT NULL,
   review varchar(250),
   rating int,
+  date varchar(20),
   UNIQUE (userId),
   PRIMARY KEY(ID)
 );
--- mysql -u root < schema.sql
+-- mysql -u root < database/schema.sql
 
 
