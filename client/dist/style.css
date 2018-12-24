@@ -8,30 +8,44 @@
 }
 
 .individualReview {
-  margin-top: 10px;
-  margin-bottom: 10px;
+  display: flex;
+  flex-direction: row;
+  height: 150px;
+  /*max-height: 150px;*/
+/*  margin-top: 10px;
+  margin-bottom: 10px;*/
+  border-bottom: 2px solid black;
 }
 
 .picture {
   /*border: 2px solid #ffa94d;*/
   border-radius: 100px;
   max-width: 100%;
-  width: 50px;
-  height: 50px;
-  padding: 1em;
+  width: 80px;
+  height: 80px;
+  padding: 0.5em;
   float: left;
   background-image: url('../images/emptyAvatar.jpg');
   background-size: cover;
 }
 
-
-
 .reviewAndName {
   /*border: 2px solid #ffa94d;*/
   /*background-color: #ffd8a8;*/
   width: 400px;
-  padding: 1em;
+  padding: 0.5em;
   margin-left: 10px;
-  color: #d9480f;
+  color: black;
+  float: left;
+}
+
+.userName {
+  margin-top: 30px;
+  margin-right: 10px;
+  float: left;
+}
+
+.rating {
+  margin-top: 30px;
   float: left;
 }

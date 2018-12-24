@@ -1,10 +1,21 @@
 import React from 'react';
 
-const Picture = () => (
+const Picture = (props) => (
+  console.log('props', props),
+
   <div className="individualReview">
     <div className="picture"> </div>
 
-    <div className="reviewAndName"> Very easy. Excellent communication. Very satisfied. Thank you! </div>
+    <div className="reviewAndName">
+      <div>
+        {props.review.review}
+      </div>
+      <div className="userName">
+        <a href=""> {props.review.name} </a>
+      </div>
+
+      <div className="rating"> {props.review.rating} </div>
+    </div>
   </div>
 );
 
