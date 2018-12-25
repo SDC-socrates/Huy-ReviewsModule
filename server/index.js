@@ -13,7 +13,8 @@ app.use(express.static(path.join(__dirname, '/../client/dist')));
 
 app.get('/api/turash/reviews/:id', (req, res) => {
   // Make call to our DB
-  db.getAllUsers((err, result) => {
+  var endNumForNextSet = req.query.endNumForNextSet;
+  db.getUsers(endNumForNextSet, (err, result) => {
     if (err) { throw err; }
     res.send(result);
   });
