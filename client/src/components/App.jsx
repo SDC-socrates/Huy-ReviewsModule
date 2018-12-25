@@ -8,29 +8,37 @@ class App extends React.Component {
     super(props);
     this.state = {
       reviews: [],
-      reviewCount: 0
+      reviewCount: 0,
+      LimitPerSet: 15,
+      retrievedCount: 15,
+      numOfClick: 1
     };
   }
 
   componentDidMount() {
-    this.getAllReviews();
     this.getreviewCount();
+    this.getReviews();
   }
 
-  getAllReviews() {
-    axios.get('/api/turash/reviews/:id')
-      .then((result) => {
-        this.setState({ reviews: result.data.reverse() });
-      })
-      .catch((err) => {
-        if (err) { throw err; }
-      });
+  getReviews() {
+    var prevReviews = this.state.reviews;
+    axios.get('/api/turash/reviews/:id', {
+      params: {
+        endNumForNextSet: this.state.retrievedCount
+      }
+    })
+    .then((result) => {
+      prevReviews = prevReviews.concat(result.data);
+      this.setState({ reviews: prevReviews });
+    })
+    .catch((err) => {
+      if (err) { throw err; }
+    });
   }
 
   getreviewCount() {
     axios.get('/api/turash/reviews/:id/reviewCount')
       .then((result) => {
-        console.log('result is', result);
         this.setState({ reviewCount: result.data[0]['count(*)']});
       })
       .catch((err) => {
@@ -38,12 +46,34 @@ class App extends React.Component {
       });
   }
 
+  handleClick(event) {
+    console.log('clicked', event);
+    var tempVal = this.state.numOfClick;
+    tempVal++;
+    if (tempVal * 5 === this.state.LimitPerSet) {
+      this.setState({ numOfClick: tempVal });
+      this.setState({ retrievedCount: this.state.retrievedCount += 15 });
+      this.setState({ LimitPerSet: this.state.LimitPerSet += 15 })
+      this.getReviews();
+    } else {
+      this.setState({ numOfClick: tempVal });
+    }
 
+  }
 
   // TODO: Function to fetch for specific review
   render() {
     const { reviews } = this.state;
     const { reviewCount} = this.state;
+    const { numOfClick } = this.state;
+
+    console.log('org before: ', this.state.reviews);
+    console.log('numOfClick: ', this.state.numOfClick);
+    var showReviews = this.state.reviews.slice(0, numOfClick * 5);
+    console.log('retrievedCount', this.state.retrievedCount);
+    console.log('org after: ', this.state.reviews);
+    console.log('showReviews', showReviews);
+
     return (
       <div className="reviews">
 
@@ -53,15 +83,14 @@ class App extends React.Component {
           <div id="numOfReviews"> - { reviewCount } ratings </div>
         </div>
         {
-          reviews.map((element, key) => (
+          showReviews.map((element, key) => (
             <Reviews
               review={element}
               key={parseInt(key.toString(), 10)}
             />
           ))
         }
-
-        <button className="moreReviews"> See More Reviews </button>
+        <button className="moreReviews" onClick={this.handleClick.bind(this)}> See More Feedbacks </button>
       </div>
     );
   }

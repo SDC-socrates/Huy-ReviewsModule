@@ -20,8 +20,8 @@ const addNewUser = function(userId, name, review, rating, date) {
 }
 
 // TODO: Function to fetch for a single specific review
-const getAllUsers = function(callback) {
-  var query = `select * from reviews`;
+const getUsers = function(endNumForNextSet, callback) {
+  var query = `select * from reviews where id > ${endNumForNextSet -15} and id <= ${endNumForNextSet}`;
   connection.query(query, (err, result) => {
     if (err) { throw err; }
     callback(err, result);
@@ -38,5 +38,5 @@ const getReviewCount = function(callback) {
 
 
 module.exports = {
-  addNewUser, getAllUsers, connection, getReviewCount
+  addNewUser, getUsers, connection, getReviewCount
 };
