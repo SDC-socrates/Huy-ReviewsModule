@@ -28,7 +28,7 @@ class App extends React.Component {
       }
     })
     .then((result) => {
-      prevReviews = prevReviews.concat(result.data);
+      prevReviews = result.data.reverse().concat(prevReviews);
       this.setState({ reviews: prevReviews });
     })
     .catch((err) => {
@@ -53,7 +53,7 @@ class App extends React.Component {
     if (tempVal * 5 === this.state.LimitPerSet) {
       this.setState({ numOfClick: tempVal });
       this.setState({ retrievedCount: this.state.retrievedCount += 15 });
-      this.setState({ LimitPerSet: this.state.LimitPerSet += 15 })
+      this.setState({ LimitPerSet: this.state.LimitPerSet += 15 });
       this.getReviews();
     } else {
       this.setState({ numOfClick: tempVal });

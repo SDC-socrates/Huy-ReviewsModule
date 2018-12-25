@@ -14,7 +14,7 @@ const Picture = (props) => (
         <a> {props.review.name} </a>
       </div>
 
-      <div className="date"> - {props.review.date} </div>
+      <div className="date"> -- {props.review.date} </div>
     </div>
   </div>
 );

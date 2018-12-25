@@ -8,6 +8,7 @@
   font-family: BasisGrotesque, Avenir, Helvetica Neue, Helvetica, sans-serif;
   font: weight 700;
   line-height: 1.2;
+  width: 500px;
 }
 
 a:hover {
@@ -74,12 +75,15 @@ a:hover {
   margin-right: 10px;
   float: left;
   font-weight: bold;
-  color: green;
+  color: #59d389;
+  font-size: 13px;
 }
 
 .date {
   margin-top: 15px;
   float: left;
+  font-size: 13px;
+  color: #5d5d5d;
 }
 
 .moreReviews {
