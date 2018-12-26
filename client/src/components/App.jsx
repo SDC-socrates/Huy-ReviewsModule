@@ -1,6 +1,7 @@
 import React from 'react';
 import axios from 'axios';
 import Reviews from './Reviews';
+import ReactModal from 'react-modal';
 
 
 class App extends React.Component {
@@ -11,13 +12,28 @@ class App extends React.Component {
       reviewCount: 0,
       LimitPerSet: 15,
       retrievedCount: 15,
-      numOfClick: 1
+      numOfClick: 1,
+      showModal: false,
+      userName: "",
+      userReview: "",
+      userRating: 0
     };
+    this.handleOpenModal = this.handleOpenModal.bind(this);
+    this.handleCloseModal = this.handleCloseModal.bind(this);
   }
 
   componentDidMount() {
     this.getreviewCount();
     this.getReviews();
+    ReactModal.setAppElement('#root');
+  }
+
+ handleOpenModal () {
+    this.setState({ showModal: true });
+  }
+
+  handleCloseModal () {
+    this.setState({ showModal: false });
   }
 
   getReviews() {
@@ -46,8 +62,8 @@ class App extends React.Component {
       });
   }
 
-  handleClick(event) {
-    console.log('clicked', event);
+  handleMoreReviews(event) {
+    console.log('moreReviews clicked', event);
     var tempVal = this.state.numOfClick;
     tempVal++;
     if (tempVal * 5 === this.state.LimitPerSet) {
@@ -58,7 +74,43 @@ class App extends React.Component {
     } else {
       this.setState({ numOfClick: tempVal });
     }
+  }
 
+  handleChange(event) {
+    console.log("the event name", (event.target.name));
+    // this.setState({ [e.target.name]: e.target.type === 'number' ? parseInt(e.target.value) : e.target.value );
+
+    this.setState({
+      [event.target.name]: event.target.type === 'number' ? parseInt(event.target.value) : event.target.value
+    });
+  }
+
+  handleSubmit(event) {
+    event.preventDefault();
+    console.log('type', typeof this.state.userRating);
+    if ((typeof this.state.userRating) === 'number' && (this.state.userRating <= 5 && this.state.userRating > 0)) {
+      alert("Submitted. Thank you!");
+      console.log('name, review, rating', this.state.userName, this.state.userReview, this.state.userRating);
+      axios({
+        method: 'post',
+        url: '/api/turash/reviews/:id/addReview',
+        data: {
+          userName: this.state.userName,
+          userReview: this.state.userReview,
+          userRating: this.state.userRating
+        }
+      })
+      .then( (result) => {
+        this.handleCloseModal();
+        console.log('Saved to DB');
+      })
+      .catch( (err) => {
+        if (err) { throw err; }
+      })
+    } else {
+      alert('Enter valid rating from 1 to 5');
+      this.setState({ userRating: 0 });
+    }
   }
 
   // TODO: Function to fetch for specific review
@@ -66,17 +118,9 @@ class App extends React.Component {
     const { reviews } = this.state;
     const { reviewCount} = this.state;
     const { numOfClick } = this.state;
-
-    console.log('org before: ', this.state.reviews);
-    console.log('numOfClick: ', this.state.numOfClick);
     var showReviews = this.state.reviews.slice(0, numOfClick * 5);
-    console.log('retrievedCount', this.state.retrievedCount);
-    console.log('org after: ', this.state.reviews);
-    console.log('showReviews', showReviews);
-
     return (
       <div className="reviews">
-
         <div className="reviewLabel"> Reviews </div>
         <div className="starAndNumOfReviews">
           <div className="starRating"> Stars </div>
@@ -90,7 +134,28 @@ class App extends React.Component {
             />
           ))
         }
-        <button className="moreReviews" onClick={this.handleClick.bind(this)}> See More Feedbacks </button>
+        <button className="moreReviews" onClick={this.handleMoreReviews.bind(this)}> See More Feedbacks </button>
+        <button className="addNewReview" onClick={this.handleOpenModal.bind(this)}> Add A Review </button>
+        <ReactModal isOpen={this.state.showModal} contentLabel=" Add New User " >
+
+        <form onSubmit={this.handleSubmit.bind(this)} >
+          <label>
+            Full Name:
+            <input type="text" value={this.state.userName} name="userName" onChange={this.handleChange.bind(this)}/>
+            <br/><br/>
+            Review:
+            <br/>
+             <textarea type="text" value={this.state.userReview} name="userReview" onChange={this.handleChange.bind(this)}/>
+             <br/><br/>
+             Rating:
+             <input type="number" value={this.state.userRating} name="userRating" onChange={this.handleChange.bind(this)}/> / 5
+             <br/><br/>
+             <input type="submit" value="Submit" />
+          </label>
+        </form>
+          <br/>
+          <button onClick={this.handleCloseModal}>Nevermind! </button>
+        </ReactModal>
       </div>
     );
   }

@@ -36,7 +36,12 @@ const getReviewCount = function(callback) {
   });
 }
 
+const checkExistence = function(userReview) {
+  var query = `select count(*) from reviews`;
+
+}
+
 
 module.exports = {
-  addNewUser, getUsers, connection, getReviewCount
+  addNewUser, getUsers, connection, getReviewCount, checkExistence
 };
