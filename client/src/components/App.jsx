@@ -16,7 +16,8 @@ class App extends React.Component {
       showModal: false,
       userName: "",
       userReview: "",
-      userRating: 0
+      userRating: 0,
+      showSeeMore: true
     };
     this.handleOpenModal = this.handleOpenModal.bind(this);
     this.handleCloseModal = this.handleCloseModal.bind(this);
@@ -38,12 +39,14 @@ class App extends React.Component {
 
   getReviews() {
     var prevReviews = this.state.reviews;
+    console.log('num is', this.state.reviewCount - this.state.retrievedCount)
     axios.get('/api/turash/reviews/:id', {
       params: {
         endNumForNextSet: this.state.retrievedCount
       }
     })
     .then((result) => {
+      console.log('result is', result);
       prevReviews = result.data.reverse().concat(prevReviews);
       this.setState({ reviews: prevReviews });
     })
@@ -70,16 +73,23 @@ class App extends React.Component {
       this.setState({ numOfClick: tempVal });
       this.setState({ retrievedCount: this.state.retrievedCount += 15 });
       this.setState({ LimitPerSet: this.state.LimitPerSet += 15 });
-      this.getReviews();
+
+       if ( this.state.retrievedCount === this.state.reviewCount || this.state.retrievedCount > this.state.reviewCount ) {
+      this.setState({ showSeeMore: false });
+      } else {
+         this.getReviews();
+      }
     } else {
       this.setState({ numOfClick: tempVal });
     }
+
+    // console.log("retrievedCount", this.state.retrievedCount);
+    // console.log("reviewCount", this.state.reviewCount);
+
   }
 
   handleChange(event) {
     console.log("the event name", (event.target.name));
-    // this.setState({ [e.target.name]: e.target.type === 'number' ? parseInt(e.target.value) : e.target.value );
-
     this.setState({
       [event.target.name]: event.target.type === 'number' ? parseInt(event.target.value) : event.target.value
     });
@@ -102,6 +112,7 @@ class App extends React.Component {
       })
       .then( (result) => {
         this.handleCloseModal();
+        this.getReviews();
         console.log('Saved to DB');
       })
       .catch( (err) => {
@@ -113,7 +124,11 @@ class App extends React.Component {
     }
   }
 
-  // TODO: Function to fetch for specific review
+  renderSeeMoreButton () {
+    return (
+      <button className="moreReviews" onClick={this.handleMoreReviews.bind(this)}> See More Feedbacks </button>
+    );
+  }
   render() {
     const { reviews } = this.state;
     const { reviewCount} = this.state;
@@ -134,8 +149,11 @@ class App extends React.Component {
             />
           ))
         }
-        <button className="moreReviews" onClick={this.handleMoreReviews.bind(this)}> See More Feedbacks </button>
+
+        { this.state.showSeeMore ? this.renderSeeMoreButton() : null }
+
         <button className="addNewReview" onClick={this.handleOpenModal.bind(this)}> Add A Review </button>
+
         <ReactModal isOpen={this.state.showModal} contentLabel=" Add New User " >
 
         <form onSubmit={this.handleSubmit.bind(this)} >
@@ -154,7 +172,7 @@ class App extends React.Component {
           </label>
         </form>
           <br/>
-          <button onClick={this.handleCloseModal}>Nevermind! </button>
+          <button onClick={this.handleCloseModal}> Nevermind! </button>
         </ReactModal>
       </div>
     );
