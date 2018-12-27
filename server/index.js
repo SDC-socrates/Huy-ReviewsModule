@@ -20,6 +20,11 @@ app.get('/api/turash/reviews/:id', (req, res) => {
   });
 });
 
+app.post('/api/turash/reviews/:id/addReview', (req, res) => {
+  db.checkExistence(req.body);
+  res.sendStatus(201);
+})
+
 app.get('/api/turash/reviews/:id/reviewCount', (req, res) => {
   // Make call to our DB
   db.getReviewCount((err, result) => {

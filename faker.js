@@ -1,7 +1,7 @@
 const faker = require('faker');
 const db = require('./database/index.js');
 
-const insertIntoDb = (numOfTimes = 100) => {
+const insertIntoDb = (numOfTimes = 103) => {
   var users = [];
   for (let i = 0; i < numOfTimes; i++) {
     var user = [];

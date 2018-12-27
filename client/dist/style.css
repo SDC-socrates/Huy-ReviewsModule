@@ -103,3 +103,21 @@ a:hover {
   margin: auto;
   margin-top: 30px;
 }
+
+.addNewReview {
+  background-color: #8f63f4;
+  border: 1px solid #8f63f4;
+  color: #fff;
+  cursor: pointer;
+  display: inline-block;
+  font-family: BasisGrotesque,Avenir,Helvetica Neue,Helvetica,sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  height: 34px;
+  width: 220px;
+  position: relative;
+  line-height: 33px;
+  padding: 0 14px;
+  margin: auto;
+  margin-top: 30px;
+}
