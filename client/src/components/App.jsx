@@ -74,17 +74,16 @@ class App extends React.Component {
       this.setState({ retrievedCount: this.state.retrievedCount += 15 });
       this.setState({ LimitPerSet: this.state.LimitPerSet += 15 });
 
+      // Hide "see more" button
        if ( this.state.retrievedCount === this.state.reviewCount || this.state.retrievedCount > this.state.reviewCount ) {
       this.setState({ showSeeMore: false });
       } else {
-         this.getReviews();
+        // Retrieve more reviews
+        this.getReviews();
       }
     } else {
       this.setState({ numOfClick: tempVal });
     }
-
-    // console.log("retrievedCount", this.state.retrievedCount);
-    // console.log("reviewCount", this.state.reviewCount);
 
   }
 
