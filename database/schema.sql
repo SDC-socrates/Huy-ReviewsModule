@@ -15,5 +15,3 @@ CREATE TABLE reviews (
   PRIMARY KEY(ID)
 );
 -- mysql -u root < database/schema.sql
-
-
