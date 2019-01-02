@@ -2,7 +2,7 @@ import React from 'react';
 import axios from 'axios';
 import Reviews from './Reviews';
 import ReactModal from 'react-modal';
-
+import Rating from './StarRating';
 
 class App extends React.Component {
   constructor(props) {
@@ -39,14 +39,14 @@ class App extends React.Component {
 
   getReviews() {
     var prevReviews = this.state.reviews;
-    console.log('num is', this.state.reviewCount - this.state.retrievedCount)
+    // console.log('num is', this.state.reviewCount - this.state.retrievedCount)
     axios.get('/api/turash/reviews/:id', {
       params: {
         endNumForNextSet: this.state.retrievedCount
       }
     })
     .then((result) => {
-      console.log('result is', result);
+      // console.log('result is', result);
       prevReviews = result.data.reverse().concat(prevReviews);
       this.setState({ reviews: prevReviews });
     })
@@ -66,7 +66,7 @@ class App extends React.Component {
   }
 
   handleMoreReviews(event) {
-    console.log('moreReviews clicked', event);
+    // console.log('moreReviews clicked', event);
     var tempVal = this.state.numOfClick;
     tempVal++;
     if (tempVal * 5 === this.state.LimitPerSet) {
@@ -82,13 +82,14 @@ class App extends React.Component {
         this.getReviews();
       }
     } else {
+      // Update state to re-render
       this.setState({ numOfClick: tempVal });
     }
 
   }
 
   handleChange(event) {
-    console.log("the event name", (event.target.name));
+    // console.log("the event name", (event.target.name));
     this.setState({
       [event.target.name]: event.target.type === 'number' ? parseInt(event.target.value) : event.target.value
     });
@@ -137,7 +138,11 @@ class App extends React.Component {
       <div className="reviews">
         <div className="reviewLabel"> Reviews </div>
         <div className="starAndNumOfReviews">
-          <div className="starRating"> Stars </div>
+          <div className="starRating">
+            <Rating
+              rating={3.5}
+            />
+          </div>
           <div id="numOfReviews"> - { reviewCount } ratings </div>
         </div>
         {
