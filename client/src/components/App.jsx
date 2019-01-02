@@ -9,6 +9,8 @@ class App extends React.Component {
     super(props);
     this.state = {
       reviews: [],
+      ratings: [],
+      averageRating: 0,
       reviewCount: 0,
       LimitPerSet: 15,
       retrievedCount: 15,
@@ -26,10 +28,12 @@ class App extends React.Component {
   componentDidMount() {
     this.getreviewCount();
     this.getReviews();
+    this.getRatings();
     ReactModal.setAppElement('#root');
   }
 
- handleOpenModal () {
+
+  handleOpenModal () {
     this.setState({ showModal: true });
   }
 
@@ -37,7 +41,30 @@ class App extends React.Component {
     this.setState({ showModal: false });
   }
 
-  getReviews() {
+  getRatings () {
+    axios.get('/api/turash/reviews/:id/ratings')
+    .then( (result) => {
+      this.setState({ ratings: result });
+      this.calculateRating();
+    })
+  }
+
+  calculateRating () {
+    const { ratings } = this.state;
+    const { reviewCount } = this.state;
+
+    var totalRating = 0;
+    if (ratings !== undefined) {
+      ratings.data.forEach( (currentIndex) => {
+        totalRating += currentIndex.rating;
+      });
+
+      console.log('total rating', totalRating/reviewCount);
+      this.setState({ averageRating: totalRating/reviewCount});
+    }
+  }
+
+  getReviews () {
     var prevReviews = this.state.reviews;
     // console.log('num is', this.state.reviewCount - this.state.retrievedCount)
     axios.get('/api/turash/reviews/:id', {
@@ -55,7 +82,7 @@ class App extends React.Component {
     });
   }
 
-  getreviewCount() {
+  getreviewCount () {
     axios.get('/api/turash/reviews/:id/reviewCount')
       .then((result) => {
         this.setState({ reviewCount: result.data[0]['count(*)']});
@@ -65,7 +92,7 @@ class App extends React.Component {
       });
   }
 
-  handleMoreReviews(event) {
+  handleMoreReviews (event) {
     // console.log('moreReviews clicked', event);
     var tempVal = this.state.numOfClick;
     tempVal++;
@@ -88,14 +115,14 @@ class App extends React.Component {
 
   }
 
-  handleChange(event) {
+  handleChange (event) {
     // console.log("the event name", (event.target.name));
     this.setState({
       [event.target.name]: event.target.type === 'number' ? parseInt(event.target.value) : event.target.value
     });
   }
 
-  handleSubmit(event) {
+  handleSubmit (event) {
     event.preventDefault();
     console.log('type', typeof this.state.userRating);
     if ((typeof this.state.userRating) === 'number' && (this.state.userRating <= 5 && this.state.userRating > 0)) {
@@ -112,7 +139,9 @@ class App extends React.Component {
       })
       .then( (result) => {
         this.handleCloseModal();
+        this.getreviewCount();
         this.getReviews();
+        this.getRatings();
         console.log('Saved to DB');
       })
       .catch( (err) => {
@@ -129,10 +158,14 @@ class App extends React.Component {
       <button className="moreReviews" onClick={this.handleMoreReviews.bind(this)}> See More Feedbacks </button>
     );
   }
+
   render() {
+
+    // TODO: Update ratings, reviews count when new review added
     const { reviews } = this.state;
     const { reviewCount} = this.state;
     const { numOfClick } = this.state;
+    const { averageRating } = this.state;
     var showReviews = this.state.reviews.slice(0, numOfClick * 5);
     return (
       <div className="reviews">
@@ -140,11 +173,11 @@ class App extends React.Component {
         <div className="starAndNumOfReviews">
           <div className="starRating">
             <Rating
-              rating={3.5}
+              rating={averageRating}
             />
           </div>
           <div id="numOfReviews">
-            <div class="circle">
+            <div className="circle">
               { reviewCount } ratings
             </div>
           </div>

@@ -12,7 +12,7 @@ connection.connect();
 // TODO: Do not allow user to update their review if
 //       they already left a review
 
-// Refactor this accept an object
+// Refactor this to accept an object
 const addNewUser = function(userId, name, review, rating, date) {
   var query = `insert ignore into reviews(userId, name, review, rating, date) values ("${userId}", "${name}", "${review}","${rating}", "${date}")`;
   connection.query(query, (err) => {
@@ -43,6 +43,18 @@ const getUsers = function(endNumForNextSet, callback) {
           callback(err, result);
         }
       });
+    }
+  });
+}
+
+const getRatingCount = function(callback) {
+  var query = `select rating from reviews;`
+  connection.query(query, (err, result) => {
+    if (err) {
+      console.log('Error getting ratings');
+      return;
+    } else {
+      callback(err, result);
     }
   });
 }
@@ -88,5 +100,5 @@ const checkExistence = function(userReview) {
 }
 
 module.exports = {
-  addNewUser, getUsers, connection, getReviewCount, checkExistence
+  addNewUser, getUsers, connection, getReviewCount, checkExistence, getRatingCount
 };
