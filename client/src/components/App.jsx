@@ -143,7 +143,11 @@ class App extends React.Component {
               rating={3.5}
             />
           </div>
-          <div id="numOfReviews"> - { reviewCount } ratings </div>
+          <div id="numOfReviews">
+            <div class="circle">
+              { reviewCount } ratings
+            </div>
+          </div>
         </div>
         {
           showReviews.map((element, key) => (

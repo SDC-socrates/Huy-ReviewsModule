@@ -24,8 +24,11 @@ a:hover {
   text-transform: uppercase;
 }
 
-.starAndNumOfReviews {
 
+.circle:before {
+  content: '\25CF';
+  font-size: 10px;
+  margin-right: 10px;
 }
 
 .starRating {
@@ -35,7 +38,7 @@ a:hover {
 #numOfReviews {
   float: left;
   margin-left: 10px;
-  margin-top: 1px;
+  margin-top: 2px;
 }
 
 .individualReview {
