@@ -15,9 +15,24 @@ app.get('/api/turash/reviews/:id', (req, res) => {
   // Make call to our DB
   var endNumForNextSet = req.query.endNumForNextSet;
   db.getUsers(endNumForNextSet, (err, result) => {
-    if (err) { throw err; }
+    if (err) {
+      console.log('Error in server when getting all users');
+      return;
+    }
     res.send(result);
   });
+});
+
+app.get('/api/turash/reviews/:id/ratings', (req, res) => {
+  // call db get ratings
+  db.getRatingCount( (err, result) => {
+    if (err) {
+      console.log('Error in server when getting all reviews');
+      return;
+    } else {
+      res.send(result);
+    }
+  })
 });
 
 app.post('/api/turash/reviews/:id/addReview', (req, res) => {
