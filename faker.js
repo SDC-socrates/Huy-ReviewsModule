@@ -5,7 +5,10 @@ const insertIntoDb = (numOfTimes = 103) => {
   var users = [];
   for (let i = 0; i < numOfTimes; i++) {
     var user = [];
-    const userId = faker.random.number();
+    const userId = faker.random.number({
+      min: 1,
+      max: 30,
+    });
     const name = faker.name.findName();
     const review = faker.lorem.sentences();
     const date = faker.date.recent(5).toString().slice(4, 15);

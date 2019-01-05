@@ -11,7 +11,8 @@ CREATE TABLE reviews (
   review varchar(250),
   rating int,
   date varchar(20),
-  UNIQUE (userId),
   PRIMARY KEY(ID)
 );
+
+
 -- mysql -u root < database/schema.sql

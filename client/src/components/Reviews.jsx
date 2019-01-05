@@ -11,7 +11,7 @@ const Picture = (props) => (
         {props.review.review}
       </div>
       <div className="userName">
-        <a> {props.review.name} </a>
+        <a id="reviewA" > {props.review.name} </a>
       </div>
 
       <div className="date"> -- {props.review.date} </div>
