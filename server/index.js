@@ -4,28 +4,32 @@ const path = require('path');
 const db = require('../database');
 
 const app = express();
-const PORT = 3000;
+const PORT = 3001;
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-app.use(express.static(path.join(__dirname, '/../client/dist')));
+app.use('/', express.static(path.join(__dirname, '/../client/dist/')));
+app.use(/\/\d+\//, express.static(path.join(__dirname, '/../client/dist/')));
 
 app.get('/api/turash/reviews/:id', (req, res) => {
   // Make call to our DB
   var endNumForNextSet = req.query.endNumForNextSet;
-  db.getUsers(endNumForNextSet, (err, result) => {
+  var submittedId = req.query.id;
+  db.getUsers(submittedId, endNumForNextSet, (err, result) => {
     if (err) {
       console.log('Error in server when getting all users');
       return;
     }
     res.send(result);
+
   });
 });
 
 app.get('/api/turash/reviews/:id/ratings', (req, res) => {
   // call db get ratings
-  db.getRatingCount( (err, result) => {
+  var submittedId = req.query.id;
+  db.getRatingCount( submittedId, (err, result) => {
     if (err) {
       console.log('Error in server when getting all reviews');
       return;
@@ -36,14 +40,17 @@ app.get('/api/turash/reviews/:id/ratings', (req, res) => {
 });
 
 app.post('/api/turash/reviews/:id/addReview', (req, res) => {
-  db.checkExistence(req.body);
+  db.addNewUser(req.body);
   res.sendStatus(201);
 })
 
 app.get('/api/turash/reviews/:id/reviewCount', (req, res) => {
   // Make call to our DB
-  db.getReviewCount((err, result) => {
-    if (err) { throw err; }
+  var submittedId = req.query.id;
+  db.getReviewCount(submittedId, (err, result) => {
+    if (err) {
+      console.log("Err getting review count");
+    }
     res.json(result);
   });
 });

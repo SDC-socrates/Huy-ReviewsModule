@@ -16,6 +16,10 @@ a:hover {
   cursor: pointer;
 }
 
+#reviewA {
+  margin-left: 0px;
+}
+
 .reviewLabel {
   color: #5d5d5d;
   font-size: 18px;

@@ -4,22 +4,22 @@ import Reviews from './Reviews';
 import ReactModal from 'react-modal';
 import Rating from './StarRating';
 
+
 class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       reviews: [],
       ratings: [],
+      id: 1,
       averageRating: 0,
       reviewCount: 0,
-      LimitPerSet: 15,
-      retrievedCount: 15,
       numOfClick: 1,
       showModal: false,
       userName: "",
       userReview: "",
       userRating: 0,
-      showSeeMore: true
+      showSeeMore: false
     };
     this.handleOpenModal = this.handleOpenModal.bind(this);
     this.handleCloseModal = this.handleCloseModal.bind(this);
@@ -29,7 +29,7 @@ class App extends React.Component {
     this.getreviewCount();
     this.getReviews();
     this.getRatings();
-    ReactModal.setAppElement('#root');
+    ReactModal.setAppElement('#Reviews');
   }
 
 
@@ -42,7 +42,21 @@ class App extends React.Component {
   }
 
   getRatings () {
-    axios.get('/api/turash/reviews/:id/ratings')
+    var id = 0;
+    // This should be refactored
+    var submittedId = window.location.pathname.slice(1, window.location.pathname.length - 1);
+
+    if(submittedId) {
+      id = Number(submittedId);
+    } else {
+      id = this.state.id;
+    }
+
+    axios.get(`http://localhost:3001/api/turash/reviews/:${id}/ratings`, {
+      params: {
+        id: id
+      }
+    })
     .then( (result) => {
       this.setState({ ratings: result });
       this.calculateRating();
@@ -59,33 +73,65 @@ class App extends React.Component {
         totalRating += currentIndex.rating;
       });
 
-      console.log('total rating', totalRating/reviewCount);
+      // console.log('total rating', totalRating/reviewCount);
       this.setState({ averageRating: totalRating/reviewCount});
     }
   }
 
   getReviews () {
-    var prevReviews = this.state.reviews;
-    // console.log('num is', this.state.reviewCount - this.state.retrievedCount)
-    axios.get('/api/turash/reviews/:id', {
+    var id = 0;
+    // This should be refactored
+    var submittedId = window.location.pathname.slice(1, window.location.pathname.length - 1);
+
+    if(submittedId) {
+      id = Number(submittedId);
+    } else {
+      id = this.state.id;
+    }
+
+    axios.get(`http://localhost:3001/api/turash/reviews/:${id}`, {
       params: {
-        endNumForNextSet: this.state.retrievedCount
+        id: id
       }
     })
     .then((result) => {
-      // console.log('result is', result);
-      prevReviews = result.data.reverse().concat(prevReviews);
-      this.setState({ reviews: prevReviews });
+
+      if (result.data.length === 0) {
+        alert("ID does not exist!");
+      } else {
+        this.setState({ reviews: result.data.reverse() });
+      }
     })
     .catch((err) => {
-      if (err) { throw err; }
+      if (err) {
+        console.log('Client unable to retrieve reviews.')
+      }
     });
   }
 
   getreviewCount () {
-    axios.get('/api/turash/reviews/:id/reviewCount')
+
+    // TODO: This needs to be refactored
+    var id = 0;
+    var submittedId = window.location.pathname.slice(1, window.location.pathname.length - 1);
+
+    if(submittedId) {
+      id = Number(submittedId);
+    } else {
+      id = this.state.id;
+    }
+
+    axios.get(`http://localhost:3001/api/turash/reviews/:${id}/reviewCount`, {
+      params: {
+        id: id
+      }
+    })
       .then((result) => {
-        this.setState({ reviewCount: result.data[0]['count(*)']});
+        this.setState({ reviewCount: result.data[0]['count(*)']}, () => {
+          if (this.state.reviewCount > 5) {
+            this.setState({ showSeeMore: true })
+          }
+        });
       })
       .catch((err) => {
         if (err) { throw err; }
@@ -96,23 +142,11 @@ class App extends React.Component {
     // console.log('moreReviews clicked', event);
     var tempVal = this.state.numOfClick;
     tempVal++;
-    if (tempVal * 5 === this.state.LimitPerSet) {
-      this.setState({ numOfClick: tempVal });
-      this.setState({ retrievedCount: this.state.retrievedCount += 15 });
-      this.setState({ LimitPerSet: this.state.LimitPerSet += 15 });
-
-      // Hide "see more" button
-       if ( this.state.retrievedCount === this.state.reviewCount || this.state.retrievedCount > this.state.reviewCount ) {
+    console.log('temp val', tempVal * 5);
+    if (tempVal * 5 >= this.state.reviewCount) {
       this.setState({ showSeeMore: false });
-      } else {
-        // Retrieve more reviews
-        this.getReviews();
-      }
-    } else {
-      // Update state to re-render
-      this.setState({ numOfClick: tempVal });
+      this.setState({ numOfClick: tempVal })
     }
-
   }
 
   handleChange (event) {
@@ -124,17 +158,27 @@ class App extends React.Component {
 
   handleSubmit (event) {
     event.preventDefault();
-    console.log('type', typeof this.state.userRating);
+
+    // TODO: refactor this
+    var id = 0;
+    var submittedId = window.location.pathname.slice(1, window.location.pathname.length - 1);
+
+    if(submittedId) {
+      id = Number(submittedId);
+    } else {
+      id = this.state.id;
+    }
+
     if ((typeof this.state.userRating) === 'number' && (this.state.userRating <= 5 && this.state.userRating > 0)) {
       alert("Submitted. Thank you!");
-      console.log('name, review, rating', this.state.userName, this.state.userReview, this.state.userRating);
       axios({
         method: 'post',
-        url: '/api/turash/reviews/:id/addReview',
+        url: `http://localhost:3001/api/turash/reviews/:${id}/addReview`,
         data: {
           userName: this.state.userName,
           userReview: this.state.userReview,
-          userRating: this.state.userRating
+          userRating: this.state.userRating,
+          id: id
         }
       })
       .then( (result) => {
@@ -142,10 +186,17 @@ class App extends React.Component {
         this.getreviewCount();
         this.getReviews();
         this.getRatings();
+        this.setState({
+          userName: "",
+          userReview:  "",
+          userRating: 0
+        })
         console.log('Saved to DB');
       })
       .catch( (err) => {
-        if (err) { throw err; }
+        if (err) {
+          console.log ("Error Adding User Review");
+        }
       })
     } else {
       alert('Enter valid rating from 1 to 5');
@@ -160,7 +211,6 @@ class App extends React.Component {
   }
 
   render() {
-
     // TODO: Update ratings, reviews count when new review added
     const { reviews } = this.state;
     const { reviewCount} = this.state;
@@ -190,6 +240,7 @@ class App extends React.Component {
             />
           ))
         }
+
 
         { this.state.showSeeMore ? this.renderSeeMoreButton() : null }
 
