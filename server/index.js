@@ -2,13 +2,14 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const path = require('path');
 const db = require('../database');
-
+const cors = require('cors');
 const app = express();
 const PORT = 3001;
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
+app.use(cors());
 app.use('/', express.static(path.join(__dirname, '/../client/dist/')));
 app.use(/\/\d+\//, express.static(path.join(__dirname, '/../client/dist/')));
 
@@ -21,7 +22,7 @@ app.get('/api/turash/reviews/:id', (req, res) => {
       console.log('Error in server when getting all users');
       return;
     }
-    res.send(result);
+   res.send(result);
 
   });
 });
