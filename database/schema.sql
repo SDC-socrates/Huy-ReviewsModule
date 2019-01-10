@@ -1,11 +1,8 @@
-DROP DATABASE IF EXISTS reviews;
-
-CREATE DATABASE reviews;
-
-USE reviews;
+-- createdb reviews
+-- psql -U <YOUR USER NAME> -d reviews -a -f database/schema.sql
 
 CREATE TABLE reviews (
-  id int NOT NULL AUTO_INCREMENT,
+  id SERIAL,
   carId int,
   name varchar(50) NOT NULL,
   review varchar(250),
@@ -13,6 +10,3 @@ CREATE TABLE reviews (
   date varchar(20),
   PRIMARY KEY(ID)
 );
-
-
--- mysql -u root < database/schema.sql
