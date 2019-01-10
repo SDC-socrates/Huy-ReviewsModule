@@ -142,11 +142,10 @@ class App extends React.Component {
     // console.log('moreReviews clicked', event);
     var tempVal = this.state.numOfClick;
     tempVal++;
-    console.log('temp val', tempVal * 5);
     if (tempVal * 5 >= this.state.reviewCount) {
       this.setState({ showSeeMore: false });
-      this.setState({ numOfClick: tempVal })
     }
+    this.setState({ numOfClick: tempVal })
   }
 
   handleChange (event) {
@@ -178,7 +177,8 @@ class App extends React.Component {
           userName: this.state.userName,
           userReview: this.state.userReview,
           userRating: this.state.userRating,
-          id: id
+          userReviewDate: null,
+          carId: id
         }
       })
       .then( (result) => {

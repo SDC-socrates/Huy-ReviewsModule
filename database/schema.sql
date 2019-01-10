@@ -6,7 +6,7 @@ USE reviews;
 
 CREATE TABLE reviews (
   id int NOT NULL AUTO_INCREMENT,
-  userId int,
+  carId int,
   name varchar(50) NOT NULL,
   review varchar(250),
   rating int,

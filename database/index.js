@@ -13,20 +13,25 @@ connection.connect();
 //       they already left a review
 
 const addNewUser = function(userReview) {
-  const userId = userReview.id;
+  // const userId = userReview.userId;
 
-  const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" ];
+  if (userReview.userReviewDate === null) {
+    const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" ];
 
-  const newDate = new Date();
-  const month = monthNames[newDate.getMonth()].slice(0,3);
-  const date = newDate.getDate();
-  const year = newDate.getFullYear();
-  const dateInfo = `${month} ${date} ${year}`;
+    const newDate = new Date();
+    const month = monthNames[newDate.getMonth()].slice(0,3);
+    const date = newDate.getDate();
+    const year = newDate.getFullYear();
+    const dateInfo = `${month} ${date} ${year}`;
+    userReview.userReviewDate = dateInfo;
+  }
 
-  var query = `insert into reviews(userId, name, review, rating, date) values ("${userId}", "${userReview.userName}", "${userReview.userReview}","${userReview.userRating}", "${dateInfo}")`;
+
+  var query = `insert into reviews(carId, name, review, rating, date) values ("${userReview.carId}", "${userReview.userName}", "${userReview.userReview}","${userReview.userRating}", "${userReview.userReviewDate}")`
+
   connection.query(query, (err) => {
     if (err) {
-      console.log('Error trying to add user.');
+      console.log('Error trying to add user into database.');
       return;
     }
   });
