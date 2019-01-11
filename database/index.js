@@ -13,7 +13,6 @@ const sequelize = new Sequelize('reviews', 'ccades', '', {
 });
 
 const Reviews = sequelize.define('reviews', {
-  id: { type: Sequelize.INTEGER(11111111), primaryKey: true },
   carid: { type: Sequelize.INTEGER(11111111) },
   name: { type: Sequelize.STRING(50) },
   review: { type: Sequelize.STRING(250) },
