@@ -1,11 +1,10 @@
 const faker = require('faker');
 const db = require('./database/index.js');
 
-const insertIntoDb = (numOfTimes = 1000) => {
+const insertIntoDb = (numOfTimes = 10000) => {
   const reviews = [];
   for (let i = 0; i < numOfTimes; i += 1) {
     const review = {
-      id: i + 1,
       carid: faker.random.number({
         min: 1,
         max: 11111111,
@@ -31,12 +30,13 @@ const insertIntoDb = (numOfTimes = 1000) => {
     return 0;
   });
 
-  db.Reviews.bulkCreate(reviews)
-
-  // reviews.forEach((currentElement) => {
-  //   // console.log('ELEMENTTTTTTT', currentElement);
-  //   db.Reviews.create(currentElement);
-  // });
+  let timer = 500;
+  let i = 0;
+  while (i < 1000) {
+    setTimeout(() => { db.Reviews.bulkCreate(reviews) }, timer);
+    timer += 1000;
+    i += 1;
+  }
 };
 
 module.exports = {
