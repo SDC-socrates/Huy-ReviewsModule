@@ -7,7 +7,7 @@ const insertIntoDb = (numOfTimes = 10000) => {
     const review = {
       carid: faker.random.number({
         min: 1,
-        max: 11111111,
+        max: 100,
       }),
       name: faker.name.findName(),
       review: faker.lorem.sentences(3),
