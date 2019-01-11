@@ -1,13 +1,29 @@
-var mysql = require('mysql');
-const faker = require('faker');
+const Sequelize = require('sequelize');
 
-var connection = mysql.createConnection({
-  user: 'root',
-  password: '',
-  database: 'reviews'
+const sequelize = new Sequelize('reviews', 'postgres', 'postgres', {
+  host: 'localhost',
+  dialect: 'postgres',
 });
 
-connection.connect();
+sequelize.authenticate().then(() => {
+  console.log('CONNECTED!');
+  const Reviews = sequelize.define('reviews', {
+    id: { type: Sequelize.INTEGER },
+    carid: { type: Sequelize.INTEGER },
+    name: { type: Sequelize.STRING },
+    review: { type: Sequelize.STRING },
+    rating: { type: Sequelize.INTEGER },
+    date: { type: Sequelize.STRING },
+  });
+
+  Reviews.sync({ force: true }).then(() => {
+    Reviews.create({
+
+    });
+  });
+}).catch((err) => {
+  console.log('ERROR', err);
+});
 
 // TODO: Do not allow user to update their review if
 //       they already left a review
@@ -29,7 +45,7 @@ const addNewUser = function(userReview) {
 
   var query = `insert into reviews(carId, name, review, rating, date) values ("${userReview.carId}", "${userReview.userName}", "${userReview.userReview}","${userReview.userRating}", "${userReview.userReviewDate}")`
 
-  connection.query(query, (err) => {
+  sequelize.query(query, (err) => {
     if (err) {
       console.log('Error trying to add user into database.');
       return;
@@ -40,7 +56,7 @@ const addNewUser = function(userReview) {
 const getUsers = function(submittedId, endNumForNextSet, callback) {
 
   var query = `select * from reviews where userId=${submittedId}`;
-  connection.query(query, (err, result) => {
+  sequelize.query(query, (err, result) => {
     if (err) {
       console.log('Error retrieving 15 records');
       return;
@@ -52,7 +68,7 @@ const getUsers = function(submittedId, endNumForNextSet, callback) {
 
 const getRatingCount = function(submittedId, callback) {
   var query = `select rating from reviews where userId=${submittedId};`
-  connection.query(query, (err, result) => {
+  sequelize.query(query, (err, result) => {
     if (err) {
       console.log('Error getting ratings');
       return;
@@ -64,7 +80,7 @@ const getRatingCount = function(submittedId, callback) {
 
 const getReviewCount = function(submittedId, callback) {
   var query = `select count(*) from reviews where userId=${submittedId}`;
-  connection.query(query, (err, result) => {
+  sequelize.query(query, (err, result) => {
     if (err) {
       console.log('Error getting count of reviews');
       return;
@@ -75,5 +91,5 @@ const getReviewCount = function(submittedId, callback) {
 }
 
 module.exports = {
-  addNewUser, getUsers, connection, getReviewCount, getRatingCount
+  addNewUser, getUsers, sequelize, getReviewCount, getRatingCount,
 };

@@ -1,6 +1,8 @@
 -- createdb reviews
 -- psql -U <YOUR USER NAME> -d reviews -a -f database/schema.sql
 
+\c reviews;
+
 CREATE TABLE reviews (
   id SERIAL,
   carId int,
