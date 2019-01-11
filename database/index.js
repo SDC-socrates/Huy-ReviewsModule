@@ -13,7 +13,7 @@ const sequelize = new Sequelize('reviews', 'ccades', '', {
 });
 
 const Reviews = sequelize.define('reviews', {
-  carid: { type: Sequelize.INTEGER(11111111) },
+  carid: { type: Sequelize.INTEGER(8) },
   name: { type: Sequelize.STRING(50) },
   review: { type: Sequelize.STRING(250) },
   rating: { type: Sequelize.INTEGER(2) },
@@ -54,7 +54,7 @@ const addNewReview = (review) => {
 };
 
 const getUsers = (submittedId, endNumForNextSet, callback) => {
-  const query = `select * from reviews where userId=${submittedId}`;
+  const query = `select * from reviews where carid=${submittedId}`;
   sequelize.query(query, (err, result) => {
     if (err) {
       console.log('Error retrieving 15 records');
@@ -65,7 +65,7 @@ const getUsers = (submittedId, endNumForNextSet, callback) => {
 };
 
 const getRatingCount = (submittedId, callback) => {
-  const query = `select rating from reviews where userId=${submittedId}`;
+  const query = `select rating from reviews where carid=${submittedId}`;
   sequelize.query(query, (err, result) => {
     if (err) {
       console.log('Error getting ratings');
@@ -76,7 +76,7 @@ const getRatingCount = (submittedId, callback) => {
 };
 
 const getReviewCount = (submittedId, callback) => {
-  const query = `select count(*) from reviews where userId=${submittedId}`;
+  const query = `select count(*) from reviews where carid=${submittedId}`;
   sequelize.query(query, (err, result) => {
     if (err) {
       console.log('Error getting count of reviews');
