@@ -1,5 +1,6 @@
 const faker = require('faker');
-const db = require('./database/index.js');
+const postgres = require('./database/index.js');
+const cassandra = require('./database/cassandra.js');
 
 const insertIntoDb = (numOfTimes = 10000) => {
   const reviews = [];
@@ -20,20 +21,29 @@ const insertIntoDb = (numOfTimes = 10000) => {
     reviews.push(review);
   }
 
-  reviews.sort(function compare(a, b) {
-    if (a[4] < b[4]) {
-      return -1;
-    }
-    if (a[4] > b[4]) {
-      return 1;
-    }
-    return 0;
-  });
+  // reviews.sort(function compare(a, b) {
+  //   if (a[4] < b[4]) {
+  //     return -1;
+  //   }
+  //   if (a[4] > b[4]) {
+  //     return 1;
+  //   }
+  //   return 0;
+  // });
 
   let timer = 500;
   let i = 0;
   while (i < 1000) {
-    setTimeout(() => { db.Reviews.bulkCreate(reviews) }, timer);
+    setTimeout(() => { postgres.Reviews.bulkCreate(reviews); }, timer);
+    setTimeout(() => {
+      reviews.forEach((review) => {
+        cassandra.execute(`INSERT INTO reviews.reviews(id, carid, name, review, rating, date) VALUES (uuid(), ${review.carid}, $$${review.name}$$, $$${review.review}$$, ${review.rating}, $$${review.date}$$)`, (err, result) => {
+          if (err) {
+            console.log('INSERT ERROR', err);
+          }
+        });
+      });
+    }, timer);
     timer += 1000;
     i += 1;
   }

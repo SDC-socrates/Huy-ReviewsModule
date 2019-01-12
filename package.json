@@ -28,8 +28,10 @@
     "webpack-cli": "^3.1.2"
   },
   "dependencies": {
+    "async": "^2.6.1",
     "axios": "^0.18.0",
     "body-parser": "^1.17.2",
+    "cassandra-driver": "^4.0.0",
     "cors": "^2.8.5",
     "express": "^4.15.4",
     "faker": "^4.1.0",
