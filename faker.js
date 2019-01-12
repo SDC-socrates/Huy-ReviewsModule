@@ -2,7 +2,7 @@ const faker = require('faker');
 const postgres = require('./database/index.js');
 const cassandra = require('./database/cassandra.js');
 
-const insertIntoDb = (numOfTimes = 10000) => {
+const insertIntoDb = (numOfTimes = 2000) => {
   const reviews = [];
   for (let i = 0; i < numOfTimes; i += 1) {
     const review = {
@@ -31,10 +31,9 @@ const insertIntoDb = (numOfTimes = 10000) => {
   //   return 0;
   // });
 
-  let timer = 500;
-  let i = 0;
-  while (i < 1000) {
-    setTimeout(() => { postgres.Reviews.bulkCreate(reviews); }, timer);
+  let casTimer = 150;
+  let index = 0;
+  while (index < 10000) {
     setTimeout(() => {
       reviews.forEach((review) => {
         cassandra.execute(`INSERT INTO reviews.reviews(id, carid, name, review, rating, date) VALUES (uuid(), ${review.carid}, $$${review.name}$$, $$${review.review}$$, ${review.rating}, $$${review.date}$$)`, (err, result) => {
@@ -43,7 +42,15 @@ const insertIntoDb = (numOfTimes = 10000) => {
           }
         });
       });
-    }, timer);
+    }, casTimer);
+    casTimer += 1000;
+    index += 1;
+  }
+
+  let timer = 250;
+  let i = 0;
+  while (i < 10000) {
+    setTimeout(() => { postgres.Reviews.bulkCreate(reviews); }, timer);
     timer += 1000;
     i += 1;
   }
