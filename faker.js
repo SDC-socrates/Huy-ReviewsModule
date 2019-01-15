@@ -1,5 +1,6 @@
 const faker = require('faker');
 const fs = require('fs');
+const es = require('event-stream');
 const Stream = require('stream');
 const postgres = require('./database/index.js');
 const cassandra = require('./database/cassandra.js');
@@ -20,7 +21,7 @@ const writeToCassandra = (review) => {
 };
 
 writableStream._write = (chunk, encoding, next) => {
-  writeToPostgres(JSON.parse(chunk));
+  writeToCassandra(JSON.parse(chunk));
   next();
 };
 
@@ -40,60 +41,14 @@ const createData = (numOfTimes) => {
       }),
       date: faker.date.recent(5).toString().slice(4, 15),
     };
-    reviews.push(review);
+    readableStream._read = () => {};
+    readableStream.push(JSON.stringify(review));
+    // reviews.push(review);
   }
-  readableStream.push(JSON.stringify(reviews));
-  readableStream._read = function () {};
+  // readableStream._read = () => {};
+  // readableStream.push(JSON.stringify(reviews));
   // piping
   readableStream.pipe(writableStream).on('error', console.error);
-  readableStream.on('data', (chunk) => {
-    seedTenMillion(writableStream, chunk, 'utf8', (err, res) => {
-      if (!err) {
-        console.log('write SUCCESS');
-      }
-    });
-  });
 };
 
-createData(1000);
-
-
-// writableStream._write = (chunk, encoding, next) => {
-//   writeToPostgres(JSON.parse(chunk));
-//   next();
-// };
-
-// reviews.sort((a, b) => {
-//   if (a[4] < b[4]) {
-//     return -1;
-//   }
-//   if (a[4] > b[4]) {
-//     return 1;
-//   }
-//   return 0;
-// });
-
-
-const seedTenMillion = (writer, data, encoding, callback) => {
-  let i = 9999;
-  function write() {
-    let ok = true;
-    do {
-      i -= 1;
-      if (i === 0) {
-        // last time!
-        writer.write(data, encoding, callback);
-      } else {
-        // see if we should continue, or wait
-        // don't pass the callback, because we're not done yet.
-        ok = writer.write(data, encoding);
-      }
-    } while (i > 0 && ok);
-    if (i > 0) {
-      // had to stop early!
-      // write some more once it drains
-      writer.once('drain', write);
-    }
-  }
-  write();
-};
+createData(100000);
