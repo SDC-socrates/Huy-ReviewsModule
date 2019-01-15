@@ -21,7 +21,7 @@ const writeToCassandra = (review) => {
 };
 
 writableStream._write = (chunk, encoding, next) => {
-  writeToCassandra(JSON.parse(chunk));
+  writeToPostgres(JSON.parse(chunk));
   next();
 };
 
@@ -41,12 +41,12 @@ const createData = (numOfTimes) => {
       }),
       date: faker.date.recent(5).toString().slice(4, 15),
     };
-    readableStream._read = () => {};
-    readableStream.push(JSON.stringify(review));
-    // reviews.push(review);
+    // readableStream._read = () => {};
+    // readableStream.push(JSON.stringify(review));
+    reviews.push(review);
   }
-  // readableStream._read = () => {};
-  // readableStream.push(JSON.stringify(reviews));
+  readableStream._read = () => {};
+  readableStream.push(JSON.stringify(reviews));
   // piping
   readableStream.pipe(writableStream).on('error', console.error);
 };
