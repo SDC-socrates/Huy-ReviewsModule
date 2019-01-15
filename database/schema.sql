@@ -6,9 +6,9 @@
 CREATE TABLE reviews (
   id SERIAL,
   carId int,
-  name varchar(50) NOT NULL,
-  review varchar(250),
+  name varchar(100) NOT NULL,
+  review varchar(500),
   rating int,
-  date varchar(20),
+  date varchar(100),
   PRIMARY KEY(ID)
 );
