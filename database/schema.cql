@@ -1,3 +1,5 @@
+drop keyspace if exists reviews;
+
 create keyspace reviews with replication = {'class':'SimpleStrategy','replication_factor':1};
 
 use reviews;
