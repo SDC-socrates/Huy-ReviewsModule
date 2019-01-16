@@ -4,6 +4,6 @@ create keyspace reviews with replication = {'class':'SimpleStrategy','replicatio
 
 use reviews;
 
-create table reviews (id varchar, carid varchar, name varchar, review varchar, rating varchar, date varchar, PRIMARY KEY (carid, rating));
+create table reviews (id varchar PRIMARY KEY, carid varchar, name varchar, review varchar, rating varchar, date varchar);
 
-COPY reviews (id, carid, name, review, rating, date) FROM 'SEED.csv' WITH HEADER = TRUE;
+COPY reviews (id, carid, name, review, rating, date) FROM 'SEED2.csv' WITH HEADER = TRUE;
