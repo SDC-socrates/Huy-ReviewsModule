@@ -3,7 +3,6 @@ const bodyParser = require('body-parser');
 const path = require('path');
 const cors = require('cors');
 const postgres = require('../database/index.js');
-const cassandra = require('../database/cassandra.js');
 const app = express();
 const PORT = 3001;
 
@@ -17,8 +16,11 @@ app.use(/\/\d+\//, express.static(path.join(__dirname, '/../client/dist/')));
 app.get('/api/turash/reviews/:id', (req, res) => {
   // Make call to our postgres
   const endNumForNextSet = req.query.endNumForNextSet;
-  const submittedId = req.query.id;
-  postgres.getUsers(submittedId, endNumForNextSet, (err, result) => {
+  const submittedId = req.params.id;
+
+  console.log('REQUESTTTTT', req.params.id);
+
+  postgres.getCarReviews(submittedId, endNumForNextSet, (err, result) => {
     if (err) {
       console.log('Error in server when getting all users');
       return;

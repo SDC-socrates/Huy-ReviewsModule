@@ -10,6 +10,8 @@ const sequelize = new Sequelize('reviews', 'ccades', '', {
     acquire: 2000000,
     idle: 10000,
   },
+  benchmark: true,
+  logging: true,
 });
 
 const Reviews = sequelize.define('reviews', {
@@ -53,8 +55,8 @@ const addNewReview = (review) => {
   });
 };
 
-const getUsers = (submittedId, endNumForNextSet, callback) => {
-  const query = `select * from reviews where carid=${submittedId}`;
+const getCarReviews = (submittedId, endNumForNextSet, callback) => {
+  const query = `select * from reviews where carid='${submittedId}'`;
   sequelize.query(query, (err, result) => {
     if (err) {
       console.log('Error retrieving 15 records');
@@ -87,5 +89,5 @@ const getReviewCount = (submittedId, callback) => {
 };
 
 module.exports = {
-  Reviews, addNewReview, getUsers, sequelize, getReviewCount, getRatingCount,
+  Reviews, addNewReview, getCarReviews, sequelize, getReviewCount, getRatingCount,
 };
