@@ -1,10 +1,9 @@
 import React from 'react';
 
-const Picture = (props) => (
-  // console.log('props', props),
+const Picture = props => (
 
   <div className="individualReview">
-    <div className="picture"> </div>
+    <div className="picture" />
 
     <div className="reviewAndName">
       <div className="review">
@@ -14,7 +13,10 @@ const Picture = (props) => (
         <a id="reviewA" > {props.review.name} </a>
       </div>
 
-      <div className="date"> -- {props.review.date} </div>
+      <div className="date">
+      --
+        {props.review.date}
+      </div>
     </div>
   </div>
 );

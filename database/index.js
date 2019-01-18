@@ -3,15 +3,15 @@ const Sequelize = require('sequelize');
 const sequelize = new Sequelize('reviews', 'ccades', '', {
   host: 'localhost',
   dialect: 'postgres',
+  operatorsAliases: false,
   port: 5432,
   pool: {
     max: 1,
     min: 0,
-    acquire: 2000000,
+    acquire: 30000,
     idle: 10000,
   },
   benchmark: true,
-  logging: true,
 });
 
 const Reviews = sequelize.define('reviews', {
@@ -37,55 +37,59 @@ const addNewReview = (review) => {
   let reviewDate = null;
 
   if (review.date === null) {
-    const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+    const monthNames = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12'];
     const newDate = new Date();
-    const month = monthNames[newDate.getMonth()].slice(0, 3);
+    const month = monthNames[newDate.getMonth()];
     const date = newDate.getDate();
     const year = newDate.getFullYear();
-    const dateInfo = `${month} ${date} ${year}`;
+    const dateInfo = `${month}/${date}/${year}`;
     reviewDate = dateInfo;
   }
 
-  const query = `INSERT INTO reviews(id, carid, name, review, rating, date) VALUES ("${review.id}", "${review.carid}", "${review.name}", "${review.review}","${review.rating}", "${reviewDate}")`;
+  const query = `INSERT INTO reviews(carid, name, review, rating, date) VALUES (${review.carid}, '${review.name}', '${review.review}', ${review.rating}, '${reviewDate}')`;
 
-  sequelize.query(query, (err) => {
-    if (err) {
-      console.log('Error trying to add user into database.');
-    }
-  });
+  console.log('QUERYYYYYYYY', query);
+
+  sequelize.query(query)
+    .then((res) => {
+      console.log('NEW REVIEW SAVED!', res);
+    })
+    .catch((err) => {
+      // console.log('ERROR', err);
+    });
 };
 
-const getCarReviews = (submittedId, endNumForNextSet, callback) => {
-  const query = `select * from reviews where carid='${submittedId}'`;
-  sequelize.query(query, (err, result) => {
-    if (err) {
-      console.log('Error retrieving 15 records');
-    } else {
-      callback(err, result);
-    }
-  });
+const getCarReviews = (submittedId, callback) => {
+  const query = `select * from reviews where carid=${submittedId}`;
+  sequelize.query(query)
+    .then((res) => {
+      callback(res);
+    })
+    .catch((err) => {
+      console.log('ERROR', err);
+    });
 };
 
 const getRatingCount = (submittedId, callback) => {
   const query = `select rating from reviews where carid=${submittedId}`;
-  sequelize.query(query, (err, result) => {
-    if (err) {
-      console.log('Error getting ratings');
-    } else {
-      callback(err, result);
-    }
-  });
+  sequelize.query(query)
+    .then((res) => {
+      callback(res);
+    })
+    .catch((err) => {
+      console.log('ERROR', err);
+    });
 };
 
 const getReviewCount = (submittedId, callback) => {
   const query = `select count(*) from reviews where carid=${submittedId}`;
-  sequelize.query(query, (err, result) => {
-    if (err) {
-      console.log('Error getting count of reviews');
-    } else {
-      callback(err, result);
-    }
-  });
+  sequelize.query(query)
+    .then((res) => {
+      callback(res);
+    })
+    .catch((err) => {
+      console.log('ERROR', err);
+    });
 };
 
 module.exports = {

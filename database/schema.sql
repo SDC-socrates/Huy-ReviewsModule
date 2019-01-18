@@ -5,14 +5,14 @@
 
 CREATE TABLE reviews (
   id SERIAL,
-  carid varchar,
+  carid integer,
   name varchar(50) NOT NULL,
   review varchar(500),
-  rating varchar,
+  rating integer,
   date varchar(20),
   PRIMARY KEY(ID)
 );
 
 
 COPY reviews(carid, name, review, rating, date)
-FROM '/Users/ccades/Desktop/HRR/Huy-ReviewsModule/SEED.csv' DELIMITER ',' CSV HEADER;
+FROM '/Users/ccades/Desktop/HRR/Huy-ReviewsModule/SEED_PSG.csv' DELIMITER ',' CSV HEADER;
