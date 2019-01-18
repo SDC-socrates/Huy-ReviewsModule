@@ -21,32 +21,26 @@ app.get('/api/turash/reviews/:id', (req, res) => {
   });
 });
 
-// app.get('/api/turash/reviews/:id/ratings', (req, res) => {
-//   // call postgres get ratings
-//   const submittedId = req.query.id;
-//   postgres.getRatingCount(submittedId, (err, result) => {
-//     if (err) {
-//       console.log('Error in server when getting all reviews');
-//     } else {
-//       res.send(result);
-//     }
-//   });
-// });
+app.get('/api/turash/reviews/:id/ratings', (req, res) => {
+  // call postgres get ratings
+  const submittedId = req.params.id;
+  postgres.getRatingCount(submittedId, (result) => {
+    res.json(result);
+  });
+});
 
-// app.post('/api/turash/reviews/:id/addReview', (req, res) => {
-//   postgres.addNewUser(req.body);
-//   res.sendStatus(201);
-// });
+app.post('/api/turash/reviews/:id/addReview', (req, res) => {
+  console.log('BODYYY', req.body);
+  postgres.addNewReview(req.body);
+  res.sendStatus(201);
+});
 
-// app.get('/api/turash/reviews/:id/reviewCount', (req, res) => {
-//   // Make call to our postgres
-//   const submittedId = req.query.id;
-//   postgres.getReviewCount(submittedId, (err, result) => {
-//     if (err) {
-//       console.log('Err getting review count');
-//     }
-//     res.json(result);
-//   });
-// });
+app.get('/api/turash/reviews/:id/reviewCount', (req, res) => {
+  // Make call to our postgres
+  const submittedId = req.params.id;
+  postgres.getReviewCount(submittedId, (result) => {
+    res.json(result);
+  });
+});
 
 app.listen(PORT, () => { console.log(`listening on port ${PORT}`); });
