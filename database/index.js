@@ -1,13 +1,4 @@
 const Sequelize = require('sequelize');
-const fs = require('fs');
-
-let sequelizeLog = '';
-const logToSequelizeLog = (executedQuery, executionTime) => {
-  console.log(executedQuery);
-  console.log(`Executed in: ${executionTime}ms.`);
-  sequelizeLog += `${executionTime}\n`;
-  fs.writeFileSync('./queryTimes.csv', sequelizeLog);
-};
 
 const sequelize = new Sequelize('reviews', 'ccades', '', {
   host: 'localhost',
@@ -21,7 +12,6 @@ const sequelize = new Sequelize('reviews', 'ccades', '', {
     idle: 10000,
   },
   benchmark: true,
-  logging: logToSequelizeLog,
 });
 
 const Reviews = sequelize.define('reviews', {
@@ -69,7 +59,6 @@ const getCarReviews = (submittedId, callback) => {
   const query = `select * from reviews where carid=${submittedId}`;
   sequelize.query(query)
     .then((res) => {
-      console.log('RESULT', res);
       callback(res);
     })
     .catch((err) => {
