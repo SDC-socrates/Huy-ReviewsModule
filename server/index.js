@@ -2,8 +2,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const path = require('path');
 const cors = require('cors');
-const postgres = require('../database/index.js');
-const cassandra = require('../database/cassandra.js');
+const postgres = require('../database/cassandra.js');
 const app = express();
 const PORT = 3001;
 
