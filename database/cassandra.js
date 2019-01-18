@@ -5,6 +5,11 @@ const client = new cassandra.Client({ contactPoints: ['127.0.0.1'], localDataCen
 const addNewReview = (review) => {
   let reviewDate = null;
 
+  // random id generator
+  function getRandomInt(min, max) {
+    return Math.floor(Math.random() * (Math.floor(max) - Math.ceil(min))) + min;
+  }
+
   if (review.date === null) {
     const monthNames = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12'];
     const newDate = new Date();
@@ -15,7 +20,9 @@ const addNewReview = (review) => {
     reviewDate = dateInfo;
   }
 
-  const query = `INSERT INTO reviews(carid, name, review, rating, date) VALUES (${review.carid}, $$${review.name}$$, $$${review.review}$$, ${review.rating}, $$${reviewDate}$$)`;
+  const query = `INSERT INTO reviews.reviews(id, carid, name, review, rating, date) VALUES (${getRandomInt(11000000, 20000000)}, ${review.carid}, $$${review.name}$$, $$${review.review}$$, ${review.rating}, $$${reviewDate}$$)`;
+
+  console.log('QUERRRRRY', query);
 
   client.execute(query)
     .then((res) => {
