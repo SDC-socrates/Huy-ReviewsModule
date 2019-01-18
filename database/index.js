@@ -1,15 +1,27 @@
 const Sequelize = require('sequelize');
+const fs = require('fs');
+
+let sequelizeLog = '';
+const logToSequelizeLog = (executedQuery, executionTime) => {
+  console.log(executedQuery);
+  console.log(`Executed in: ${executionTime}ms.`);
+  sequelizeLog += `${executionTime}\n`;
+  fs.writeFileSync('./queryTimes.csv', sequelizeLog);
+};
 
 const sequelize = new Sequelize('reviews', 'ccades', '', {
   host: 'localhost',
   dialect: 'postgres',
+  operatorsAliases: false,
   port: 5432,
   pool: {
     max: 1,
     min: 0,
-    acquire: 2000000,
+    acquire: 30000,
     idle: 10000,
   },
+  benchmark: true,
+  logging: logToSequelizeLog,
 });
 
 const Reviews = sequelize.define('reviews', {
@@ -53,15 +65,16 @@ const addNewReview = (review) => {
   });
 };
 
-const getUsers = (submittedId, endNumForNextSet, callback) => {
+const getCarReviews = (submittedId, callback) => {
   const query = `select * from reviews where carid=${submittedId}`;
-  sequelize.query(query, (err, result) => {
-    if (err) {
-      console.log('Error retrieving 15 records');
-    } else {
-      callback(err, result);
-    }
-  });
+  sequelize.query(query)
+    .then((res) => {
+      console.log('RESULT', res);
+      callback(res);
+    })
+    .catch((err) => {
+      console.log('ERROR', err);
+    });
 };
 
 const getRatingCount = (submittedId, callback) => {
@@ -87,5 +100,5 @@ const getReviewCount = (submittedId, callback) => {
 };
 
 module.exports = {
-  Reviews, addNewReview, getUsers, sequelize, getReviewCount, getRatingCount,
+  Reviews, addNewReview, getCarReviews, sequelize, getReviewCount, getRatingCount,
 };
