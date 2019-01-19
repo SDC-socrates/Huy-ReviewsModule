@@ -169,11 +169,11 @@ class App extends React.Component {
         method: 'post',
         url: `http://localhost:3001/api/turash/reviews/${id}/addReview`,
         data: {
-          userName: this.state.userName,
-          userReview: this.state.userReview,
-          userRating: this.state.userRating,
-          userReviewDate: null,
-          carId: id,
+          name: this.state.userName,
+          review: this.state.userReview,
+          rating: this.state.userRating,
+          date: null,
+          carid: id,
         },
       })
         .then((result) => {
