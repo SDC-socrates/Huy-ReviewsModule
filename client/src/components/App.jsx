@@ -106,7 +106,7 @@ class App extends React.Component {
       })
       .catch((err) => {
         if (err) {
-          console.log('Client unable to retrieve reviews.')
+          console.log('Client unable to retrieve reviews.');
         }
       });
   }
