@@ -22,19 +22,17 @@ const addNewReview = (review) => {
 
   const query = `INSERT INTO reviews.reviews(id, carid, name, review, rating, date) VALUES (${getRandomInt(11000000, 20000000)}, ${review.carid}, $$${review.name}$$, $$${review.review}$$, ${review.rating}, $$${reviewDate}$$)`;
 
-  console.log('QUERRRRRY', query);
-
   client.execute(query)
     .then((res) => {
       console.log('NEW REVIEW SAVED!', res);
     })
     .catch((err) => {
-      // console.log('ERROR', err);
+      console.log('ERROR', err);
     });
 };
 
 const getCarReviews = (submittedId, callback) => {
-  const query = `select * from reviews where carid=${submittedId} ALLOW FILTERING`;
+  const query = `select * from reviews where carid=${submittedId} ORDER BY rating DESC`;
   client.execute(query)
     .then((res) => {
       callback(res);

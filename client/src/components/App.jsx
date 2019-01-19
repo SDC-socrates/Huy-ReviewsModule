@@ -54,6 +54,33 @@ class App extends React.Component {
       });
   }
 
+  getreviewCount() {
+    // TODO: This needs to be refactored
+    let id = 0;
+    let submittedId = window.location.pathname.slice(1, window.location.pathname.length - 1);
+
+    if(submittedId) {
+      id = Number(submittedId);
+    } else {
+      id = this.state.id;
+    }
+
+    axios.get(`http://localhost:3001/api/turash/reviews/${id}/reviewCount`, {
+      params: {
+        id: id,
+      },
+    })
+      .then((result) => {
+        // console.log('CCCCCOOOOUUUNNNNTTTTT', result.data.rows[0].count);
+        this.setState({
+          reviewCount: Number(result.data.rows[0].count),
+        });
+      })
+      .catch((err) => {
+        if (err) { throw err; }
+      });
+  }
+
   getReviews() {
     let id = 0;
     // This should be refactored
@@ -84,45 +111,16 @@ class App extends React.Component {
       });
   }
 
-  getreviewCount() {
-    // TODO: This needs to be refactored
-    let id = 0;
-    let submittedId = window.location.pathname.slice(1, window.location.pathname.length - 1);
-
-    if(submittedId) {
-      id = Number(submittedId);
-    } else {
-      id = this.state.id;
-    }
-
-    axios.get(`http://localhost:3001/api/turash/reviews/${id}/reviewCount`, {
-      params: {
-        id: id,
-      },
-    })
-      .then((result) => {
-        this.setState({ reviewCount: result.data[0]['count(*)'] }, () => {
-          if (this.state.reviewCount > 5) {
-            this.setState({ showSeeMore: true });
-          }
-        });
-      })
-      .catch((err) => {
-        if (err) { throw err; }
-      });
-  }
-
   calculateRating() {
     const { ratings } = this.state;
     const { reviewCount } = this.state;
-
     let totalRating = 0;
-    if (ratings !== undefined) {
-      ratings.data.forEach((currentIndex) => {
+    if (ratings !== undefined, 0) {
+      ratings.data.rows.forEach((currentIndex) => {
         totalRating += currentIndex.rating;
       });
 
-      // console.log('total rating', totalRating/reviewCount);
+      console.log('total rating', reviewCount);
       this.setState({ averageRating: totalRating / reviewCount });
     }
   }
