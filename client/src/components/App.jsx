@@ -19,7 +19,7 @@ class App extends React.Component {
       userName: '',
       userReview: '',
       userRating: 0,
-      showSeeMore: false
+      showSeeMore: false,
     };
     this.handleOpenModal = this.handleOpenModal.bind(this);
     this.handleCloseModal = this.handleCloseModal.bind(this);
@@ -37,7 +37,7 @@ class App extends React.Component {
     // This should be refactored
     const submittedId = window.location.pathname.slice(1, window.location.pathname.length - 1);
 
-    if(submittedId) {
+    if (submittedId) {
       id = Number(submittedId);
     } else {
       id = this.state.id;
@@ -45,10 +45,10 @@ class App extends React.Component {
 
     axios.get(`http://localhost:3001/api/turash/reviews/${id}/ratings`, {
       params: {
-        id: id,
+        id,
       },
     })
-      .then( (result) => {
+      .then((result) => {
         this.setState({ ratings: result });
         this.calculateRating();
       });
@@ -57,9 +57,9 @@ class App extends React.Component {
   getreviewCount() {
     // TODO: This needs to be refactored
     let id = 0;
-    let submittedId = window.location.pathname.slice(1, window.location.pathname.length - 1);
+    const submittedId = window.location.pathname.slice(1, window.location.pathname.length - 1);
 
-    if(submittedId) {
+    if (submittedId) {
       id = Number(submittedId);
     } else {
       id = this.state.id;
@@ -67,7 +67,7 @@ class App extends React.Component {
 
     axios.get(`http://localhost:3001/api/turash/reviews/${id}/reviewCount`, {
       params: {
-        id: id,
+        id,
       },
     })
       .then((result) => {
@@ -84,9 +84,9 @@ class App extends React.Component {
   getReviews() {
     let id = 0;
     // This should be refactored
-    let submittedId = window.location.pathname.slice(1, window.location.pathname.length - 1);
+    const submittedId = window.location.pathname.slice(1, window.location.pathname.length - 1);
 
-    if(submittedId) {
+    if (submittedId) {
       id = Number(submittedId);
     } else {
       id = this.state.id;
@@ -94,7 +94,7 @@ class App extends React.Component {
 
     axios.get(`http://localhost:3001/api/turash/reviews/${id}`, {
       params: {
-        id: id,
+        id,
       },
     })
       .then((result) => {
@@ -115,7 +115,7 @@ class App extends React.Component {
     const { ratings } = this.state;
     const { reviewCount } = this.state;
     let totalRating = 0;
-    if (ratings !== undefined, 0) {
+    if (ratings !== undefined || ratings !== 0) {
       ratings.data.rows.forEach((currentIndex) => {
         totalRating += currentIndex.rating;
       });
@@ -146,7 +146,7 @@ class App extends React.Component {
   handleChange(event) {
     // console.log('the event name', (event.target.name));
     this.setState({
-      [event.target.name]: event.target.type === 'number' ? parseInt(event.target.value) : event.target.value,
+      [event.target.name]: event.target.type === 'number' ? Number(event.target.value) : event.target.value,
     });
   }
 
@@ -208,10 +208,10 @@ class App extends React.Component {
   render() {
     // TODO: Update ratings, reviews count when new review added
     const { reviews } = this.state;
-    const { reviewCount} = this.state;
+    const { reviewCount } = this.state;
     const { numOfClick } = this.state;
     const { averageRating } = this.state;
-    let showReviews = this.state.reviews.slice(0, numOfClick * 5);
+    const showReviews = this.state.reviews.slice(0, numOfClick * 5);
     return (
       <div className="reviews">
         <div className="reviewLabel"> Reviews </div>
@@ -254,8 +254,10 @@ class App extends React.Component {
              <textarea type="text" value={this.state.userReview} name="userReview" onChange={this.handleChange.bind(this)}/>
              <br/><br/>
              Rating:
-             <input type="number" value={this.state.userRating} name="userRating" onChange={this.handleChange.bind(this)}/> / 5
-             <br/><br/>
+             <input type="number" value={this.state.userRating} name="userRating" onChange={this.handleChange.bind(this)}/>
+              / 5
+            <br />
+            <br />
              <input type="submit" value="Submit" />
           </label>
         </form>
