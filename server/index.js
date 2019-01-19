@@ -29,7 +29,6 @@ app.get(/.+\/\d+\/ratings/, (req, res) => {
 });
 
 app.post(/.+\/\d+\/addReview/, (req, res) => {
-  console.log('NNEEEWWWW REVIEWWWWWW', req.body);
   postgres.addNewReview(req.body);
   res.sendStatus(201);
 });
