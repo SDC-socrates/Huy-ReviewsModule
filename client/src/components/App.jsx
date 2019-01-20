@@ -1,7 +1,7 @@
 import React from 'react';
+import ReactModal from 'react-modal';
 import axios from 'axios';
 import Reviews from './Reviews';
-import ReactModal from 'react-modal';
 import Rating from './StarRating';
 
 
@@ -16,10 +16,10 @@ class App extends React.Component {
       reviewCount: 0,
       numOfClick: 1,
       showModal: false,
-      userName: "",
-      userReview: "",
+      userName: '',
+      userReview: '',
       userRating: 0,
-      showSeeMore: false
+      showSeeMore: false,
     };
     this.handleOpenModal = this.handleOpenModal.bind(this);
     this.handleCloseModal = this.handleCloseModal.bind(this);
@@ -32,105 +32,48 @@ class App extends React.Component {
     ReactModal.setAppElement('#Reviews');
   }
 
-
-  handleOpenModal () {
-    this.setState({ showModal: true });
-  }
-
-  handleCloseModal () {
-    this.setState({ showModal: false });
-  }
-
-  getRatings () {
-    var id = 0;
+  getRatings() {
+    let id = 0;
     // This should be refactored
-    var submittedId = window.location.pathname.slice(1, window.location.pathname.length - 1);
+    const submittedId = window.location.pathname.slice(1, window.location.pathname.length - 1);
 
-    if(submittedId) {
+    if (submittedId) {
       id = Number(submittedId);
     } else {
       id = this.state.id;
     }
 
-    axios.get(`http://localhost:3001/api/turash/reviews/:${id}/ratings`, {
+    axios.get(`http://localhost:3001/api/turash/reviews/${id}/ratings`, {
       params: {
-        id: id
-      }
-    })
-    .then( (result) => {
-      this.setState({ ratings: result });
-      this.calculateRating();
-    })
-  }
-
-  calculateRating () {
-    const { ratings } = this.state;
-    const { reviewCount } = this.state;
-
-    var totalRating = 0;
-    if (ratings !== undefined) {
-      ratings.data.forEach( (currentIndex) => {
-        totalRating += currentIndex.rating;
-      });
-
-      // console.log('total rating', totalRating/reviewCount);
-      this.setState({ averageRating: totalRating/reviewCount});
-    }
-  }
-
-  getReviews () {
-    var id = 0;
-    // This should be refactored
-    var submittedId = window.location.pathname.slice(1, window.location.pathname.length - 1);
-
-    if(submittedId) {
-      id = Number(submittedId);
-    } else {
-      id = this.state.id;
-    }
-
-    axios.get(`http://localhost:3001/api/turash/reviews/:${id}`, {
-      params: {
-        id: id
-      }
-    })
-    .then((result) => {
-
-      if (result.data.length === 0) {
-        alert("ID does not exist!");
-      } else {
-        this.setState({ reviews: result.data.reverse() });
-      }
-    })
-    .catch((err) => {
-      if (err) {
-        console.log('Client unable to retrieve reviews.')
-      }
-    });
-  }
-
-  getreviewCount () {
-
-    // TODO: This needs to be refactored
-    var id = 0;
-    var submittedId = window.location.pathname.slice(1, window.location.pathname.length - 1);
-
-    if(submittedId) {
-      id = Number(submittedId);
-    } else {
-      id = this.state.id;
-    }
-
-    axios.get(`http://localhost:3001/api/turash/reviews/:${id}/reviewCount`, {
-      params: {
-        id: id
-      }
+        id,
+      },
     })
       .then((result) => {
-        this.setState({ reviewCount: result.data[0]['count(*)']}, () => {
-          if (this.state.reviewCount > 5) {
-            this.setState({ showSeeMore: true })
-          }
+        this.setState({ ratings: result });
+        this.calculateRating();
+      });
+  }
+
+  getreviewCount() {
+    // TODO: This needs to be refactored
+    let id = 0;
+    const submittedId = window.location.pathname.slice(1, window.location.pathname.length - 1);
+
+    if (submittedId) {
+      id = Number(submittedId);
+    } else {
+      id = this.state.id;
+    }
+
+    axios.get(`http://localhost:3001/api/turash/reviews/${id}/reviewCount`, {
+      params: {
+        id,
+      },
+    })
+      .then((result) => {
+        // console.log('CCCCCOOOOUUUNNNNTTTTT', result.data.rows[0].count);
+        this.setState({
+          reviewCount: Number(result.data.rows[0].count),
         });
       })
       .catch((err) => {
@@ -138,73 +81,125 @@ class App extends React.Component {
       });
   }
 
-  handleMoreReviews (event) {
+  getReviews() {
+    let id = 0;
+    // This should be refactored
+    const submittedId = window.location.pathname.slice(1, window.location.pathname.length - 1);
+
+    if (submittedId) {
+      id = Number(submittedId);
+    } else {
+      id = this.state.id;
+    }
+
+    axios.get(`http://localhost:3001/api/turash/reviews/${id}`, {
+      params: {
+        id,
+      },
+    })
+      .then((result) => {
+        if (result.data.length === 0) {
+          alert('ID does not exist!');
+        } else {
+          this.setState({ reviews: result.data.reverse() });
+        }
+      })
+      .catch((err) => {
+        if (err) {
+          console.log('Client unable to retrieve reviews.');
+        }
+      });
+  }
+
+  calculateRating() {
+    const { ratings } = this.state;
+    const { reviewCount } = this.state;
+    let totalRating = 0;
+    if (ratings !== undefined || ratings !== 0) {
+      ratings.data.rows.forEach((currentIndex) => {
+        totalRating += currentIndex.rating;
+      });
+
+      console.log('total rating', reviewCount);
+      this.setState({ averageRating: totalRating / reviewCount });
+    }
+  }
+
+  handleOpenModal() {
+    this.setState({ showModal: true });
+  }
+
+  handleCloseModal() {
+    this.setState({ showModal: false });
+  }
+
+  handleMoreReviews(event) {
     // console.log('moreReviews clicked', event);
-    var tempVal = this.state.numOfClick;
-    tempVal++;
+    let tempVal = this.state.numOfClick;
+    tempVal += 1;
     if (tempVal * 5 >= this.state.reviewCount) {
       this.setState({ showSeeMore: false });
     }
-    this.setState({ numOfClick: tempVal })
+    this.setState({ numOfClick: tempVal });
   }
 
-  handleChange (event) {
-    // console.log("the event name", (event.target.name));
+  handleChange(event) {
+    // console.log('the event name', (event.target.name));
     this.setState({
-      [event.target.name]: event.target.type === 'number' ? parseInt(event.target.value) : event.target.value
+      [event.target.name]: event.target.type === 'number' ? Number(event.target.value) : event.target.value,
     });
   }
 
-  handleSubmit (event) {
+  handleSubmit(event) {
     event.preventDefault();
 
     // TODO: refactor this
-    var id = 0;
-    var submittedId = window.location.pathname.slice(1, window.location.pathname.length - 1);
+    let id = 0;
+    const submittedId = window.location.pathname.slice(1, window.location.pathname.length - 1);
 
-    if(submittedId) {
+    if (submittedId) {
       id = Number(submittedId);
     } else {
       id = this.state.id;
     }
 
     if ((typeof this.state.userRating) === 'number' && (this.state.userRating <= 5 && this.state.userRating > 0)) {
-      alert("Submitted. Thank you!");
+      alert('Submitted. Thank you!');
       axios({
         method: 'post',
-        url: `http://localhost:3001/api/turash/reviews/:${id}/addReview`,
+        url: `http://localhost:3001/api/turash/reviews/${id}/addReview`,
         data: {
-          userName: this.state.userName,
-          userReview: this.state.userReview,
-          userRating: this.state.userRating,
-          userReviewDate: null,
-          carId: id
-        }
+          name: this.state.userName,
+          review: this.state.userReview,
+          rating: this.state.userRating,
+          date: null,
+          carid: id,
+        },
       })
-      .then( (result) => {
-        this.handleCloseModal();
-        this.getreviewCount();
-        this.getReviews();
-        this.getRatings();
-        this.setState({
-          userName: "",
-          userReview:  "",
-          userRating: 0
+        .then((result) => {
+          this.handleCloseModal();
+          this.getreviewCount();
+          this.getReviews();
+          this.getRatings();
+          this.setState({
+            userName: '',
+            userReview: '',
+            userRating: 0,
+          });
+          console.log('Saved to DB');
         })
-        console.log('Saved to DB');
-      })
-      .catch( (err) => {
-        if (err) {
-          console.log ("Error Adding User Review");
-        }
-      })
+        .catch((err) => {
+          if (err) {
+            console.log('Error Adding User Review');
+          }
+        });
     } else {
       alert('Enter valid rating from 1 to 5');
       this.setState({ userRating: 0 });
     }
   }
 
-  renderSeeMoreButton () {
+  renderSeeMoreButton() {
     return (
       <button className="moreReviews" onClick={this.handleMoreReviews.bind(this)}> See More Feedbacks </button>
     );
@@ -213,10 +208,10 @@ class App extends React.Component {
   render() {
     // TODO: Update ratings, reviews count when new review added
     const { reviews } = this.state;
-    const { reviewCount} = this.state;
+    const { reviewCount } = this.state;
     const { numOfClick } = this.state;
     const { averageRating } = this.state;
-    var showReviews = this.state.reviews.slice(0, numOfClick * 5);
+    const showReviews = this.state.reviews.slice(0, numOfClick * 5);
     return (
       <div className="reviews">
         <div className="reviewLabel"> Reviews </div>
@@ -228,7 +223,8 @@ class App extends React.Component {
           </div>
           <div id="numOfReviews">
             <div className="circle">
-              { reviewCount } ratings
+              { reviewCount }
+              ratings
             </div>
           </div>
         </div>
@@ -258,8 +254,10 @@ class App extends React.Component {
              <textarea type="text" value={this.state.userReview} name="userReview" onChange={this.handleChange.bind(this)}/>
              <br/><br/>
              Rating:
-             <input type="number" value={this.state.userRating} name="userRating" onChange={this.handleChange.bind(this)}/> / 5
-             <br/><br/>
+             <input type="number" value={this.state.userRating} name="userRating" onChange={this.handleChange.bind(this)}/>
+              / 5
+            <br />
+            <br />
              <input type="submit" value="Submit" />
           </label>
         </form>

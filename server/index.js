@@ -2,8 +2,8 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const path = require('path');
 const cors = require('cors');
-const postgres = require('../database/index.js');
-const cassandra = require('../database/cassandra.js');
+
+const postgres = require('../database/cassandra.js');
 const app = express();
 const PORT = 3001;
 
@@ -15,42 +15,27 @@ app.use('/', express.static(path.join(__dirname, '/../client/dist/')));
 app.use(/\/\d+\//, express.static(path.join(__dirname, '/../client/dist/')));
 
 app.get('/api/turash/reviews/:id', (req, res) => {
-  // Make call to our postgres
-  const endNumForNextSet = req.query.endNumForNextSet;
   const submittedId = req.query.id;
-  postgres.getUsers(submittedId, endNumForNextSet, (err, result) => {
-    if (err) {
-      console.log('Error in server when getting all users');
-      return;
-    }
-    res.send(result);
+  postgres.getCarReviews(submittedId, (result) => {
+    res.json(result.rows);
   });
 });
 
-app.get('/api/turash/reviews/:id/ratings', (req, res) => {
-  // call postgres get ratings
+app.get(/.+\/\d+\/ratings/, (req, res) => {
   const submittedId = req.query.id;
-  postgres.getRatingCount(submittedId, (err, result) => {
-    if (err) {
-      console.log('Error in server when getting all reviews');
-    } else {
-      res.send(result);
-    }
+  postgres.getRatingCount(submittedId, (result) => {
+    res.json(result);
   });
 });
 
-app.post('/api/turash/reviews/:id/addReview', (req, res) => {
-  postgres.addNewUser(req.body);
+app.post(/.+\/\d+\/addReview/, (req, res) => {
+  postgres.addNewReview(req.body);
   res.sendStatus(201);
 });
 
-app.get('/api/turash/reviews/:id/reviewCount', (req, res) => {
-  // Make call to our postgres
+app.get(/.+\/\d+\/reviewCount/, (req, res) => {
   const submittedId = req.query.id;
-  postgres.getReviewCount(submittedId, (err, result) => {
-    if (err) {
-      console.log('Err getting review count');
-    }
+  postgres.getReviewCount(submittedId, (result) => {
     res.json(result);
   });
 });
