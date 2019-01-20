@@ -32,3 +32,4 @@ dist/
 SEED_CAS.csv
 SEED_PSG.csv
 
+newrelic.js

@@ -65,13 +65,14 @@ class App extends React.Component {
       id = this.state.id;
     }
 
+    console.log('FRONT END ID', id);
+
     axios.get(`http://localhost:3001/api/turash/reviews/${id}/reviewCount`, {
       params: {
         id,
       },
     })
       .then((result) => {
-        // console.log('CCCCCOOOOUUUNNNNTTTTT', result.data.rows[0].count);
         this.setState({
           reviewCount: Number(result.data.rows[0].count),
         });
@@ -120,7 +121,6 @@ class App extends React.Component {
         totalRating += currentIndex.rating;
       });
 
-      console.log('total rating', reviewCount);
       this.setState({ averageRating: totalRating / reviewCount });
     }
   }
@@ -134,7 +134,6 @@ class App extends React.Component {
   }
 
   handleMoreReviews(event) {
-    // console.log('moreReviews clicked', event);
     let tempVal = this.state.numOfClick;
     tempVal += 1;
     if (tempVal * 5 >= this.state.reviewCount) {
@@ -144,7 +143,6 @@ class App extends React.Component {
   }
 
   handleChange(event) {
-    // console.log('the event name', (event.target.name));
     this.setState({
       [event.target.name]: event.target.type === 'number' ? Number(event.target.value) : event.target.value,
     });

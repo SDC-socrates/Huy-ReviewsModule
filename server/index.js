@@ -15,7 +15,8 @@ app.use('/', express.static(path.join(__dirname, '/../client/dist/')));
 app.use(/\/\d+\//, express.static(path.join(__dirname, '/../client/dist/')));
 
 app.get('/api/turash/reviews/:id', (req, res) => {
-  const submittedId = req.query.id;
+  const submittedId = req.params.id;
+  console.log('REVIEWSSSSSSS', req);
   postgres.getCarReviews(submittedId, (result) => {
     res.json(result.rows);
   });
@@ -23,6 +24,7 @@ app.get('/api/turash/reviews/:id', (req, res) => {
 
 app.get(/.+\/\d+\/ratings/, (req, res) => {
   const submittedId = req.query.id;
+  console.log('RATINGS COUNT', submittedId);
   postgres.getRatingCount(submittedId, (result) => {
     res.json(result);
   });
@@ -35,6 +37,7 @@ app.post(/.+\/\d+\/addReview/, (req, res) => {
 
 app.get(/.+\/\d+\/reviewCount/, (req, res) => {
   const submittedId = req.query.id;
+  console.log('REVIEW COUNT', req);
   postgres.getReviewCount(submittedId, (result) => {
     res.json(result);
   });
