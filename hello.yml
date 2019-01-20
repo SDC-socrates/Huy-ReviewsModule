@@ -2,29 +2,29 @@ config:
   target: 'http://localhost:3001'
   processor: "./faker.js"
   phases:
-    - duration: 10
-      arrivalRate: 20
+    - duration: 60
+      arrivalRate: 1000
   defaults:
 scenarios:
-  # - name: "Make a new review"
-  #   flow:
-  #   - function: "createRandomData"
-  #   - post:
-  #       url: '/api/turash/reviews/{{ carid }}/addReview'
-  #       json:
-  #         id: "{{ id }}"
-  #         carid: "{{ carid }}"
-  #         name: "{{ name }}"
-  #         review: "{{ review }}"
-  #         rating: "{{ rating }}"
-  #         date: "{{ date }}"
+  - name: "Make a new review"
+    flow:
+    - function: "createRandomData"
+    - post:
+        url: '/api/turash/reviews/{{ carid }}/addReview'
+        json:
+          id: "{{ id }}"
+          carid: "{{ carid }}"
+          name: "{{ name }}"
+          review: "{{ review }}"
+          rating: "{{ rating }}"
+          date: "{{ date }}"
     # - log: "Added review with {{ id }}, {{ carid }}, {{ name }}, {{ review }}, {{ rating }}, {{ date }}"
   - name: "Get requests"
     flow:
     - function: "createRandomId"
-    # - get:
-    #     url: '/api/turash/reviews/{{ carid }}'
     - get:
-        url: '/api/turash/reviews/{{ carid }}/ratings'
+        url: '/api/turash/reviews/{{ carid }}'
+    # - get:
+    #     url: '/api/turash/reviews/{{ carid }}/ratings'
     # - get:
     #     url: '/api/turash/reviews/{{ carid }}/reviewcount'
