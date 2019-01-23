@@ -3,6 +3,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const path = require('path');
 const cors = require('cors');
+const fs = require('fs');
 
 const postgres = require('../database/cassandra.js');
 const app = express();
