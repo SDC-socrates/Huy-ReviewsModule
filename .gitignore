@@ -29,7 +29,7 @@ build/
 dist/
 
 # Seed files (for now)
-SEED_CAS.csv
 SEED_PSG.csv
+SEED_CAS.csv
 
 newrelic.js
